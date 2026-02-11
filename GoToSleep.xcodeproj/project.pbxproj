@@ -1,0 +1,526 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		/* GoToSleep app sources */
+		A100000001 /* GoToSleepApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000001; };
+		A100000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000002; };
+		A100000003 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000003; };
+		A100000004 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000004; };
+		A100000005 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000005; };
+		A100000006 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000006; };
+		A100000007 /* PermissionsGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000007; };
+		A100000008 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000008; };
+		A100000009 /* QuestionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000009; };
+		A100000010 /* SessionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000010; };
+		A100000011 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000011; };
+		A100000012 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000012; };
+		A100000013 /* FocusEnforcer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000013; };
+		A100000014 /* AnswerLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000014; };
+		A100000015 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000015; };
+		A100000016 /* TimeCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000016; };
+		A100000017 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = B100000017; };
+		A100000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B100000018; };
+
+		/* GoToSleepDaemon sources */
+		A200000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B200000001; };
+		A200000002 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000015; };
+		A200000003 /* TimeCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000016; };
+
+		/* Daemon plist copied into app bundle */
+		A300000001 /* com.gotosleep.daemon.plist in Resources */ = {isa = PBXBuildFile; fileRef = B300000001; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C100000001 /* Copy Daemon */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Copy Daemon";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C200000001 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		/* GoToSleep app */
+		P100000001 /* GoToSleep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoToSleep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B100000001 /* GoToSleepApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoToSleepApp.swift; sourceTree = "<group>"; };
+		B100000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B100000003 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		B100000004 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
+		B100000005 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B100000006 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		B100000007 /* PermissionsGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsGuideView.swift; sourceTree = "<group>"; };
+		B100000008 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		B100000009 /* QuestionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionStore.swift; sourceTree = "<group>"; };
+		B100000010 /* SessionLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLog.swift; sourceTree = "<group>"; };
+		B100000011 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		B100000012 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
+		B100000013 /* FocusEnforcer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusEnforcer.swift; sourceTree = "<group>"; };
+		B100000014 /* AnswerLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerLogger.swift; sourceTree = "<group>"; };
+		B100000015 /* Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paths.swift; sourceTree = "<group>"; };
+		B100000016 /* TimeCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCheck.swift; sourceTree = "<group>"; };
+		B100000017 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
+		B100000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B100000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B100000020 /* GoToSleep.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoToSleep.entitlements; sourceTree = "<group>"; };
+
+		/* GoToSleepDaemon */
+		P200000001 /* GoToSleepDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GoToSleepDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		B200000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		B200000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+
+		/* Resources */
+		B300000001 /* com.gotosleep.daemon.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.gotosleep.daemon.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F200000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G000000001 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				G100000001 /* GoToSleep */,
+				G200000001 /* GoToSleepDaemon */,
+				G300000001 /* Shared */,
+				G400000001 /* Resources */,
+				G500000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G100000001 /* GoToSleep */ = {
+			isa = PBXGroup;
+			children = (
+				G110000001 /* App */,
+				G120000001 /* Views */,
+				G130000001 /* Models */,
+				G140000001 /* Services */,
+				G150000001 /* Resources */,
+				B100000019 /* Info.plist */,
+				B100000020 /* GoToSleep.entitlements */,
+			);
+			path = GoToSleep;
+			sourceTree = "<group>";
+		};
+		G110000001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B100000001 /* GoToSleepApp.swift */,
+				B100000002 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		G120000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B100000003 /* OverlayView.swift */,
+				B100000004 /* QuestionView.swift */,
+				B100000005 /* SettingsView.swift */,
+				B100000006 /* MenuBarView.swift */,
+				B100000007 /* PermissionsGuideView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		G130000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B100000008 /* Question.swift */,
+				B100000009 /* QuestionStore.swift */,
+				B100000010 /* SessionLog.swift */,
+				B100000011 /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		G140000001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B100000012 /* OverlayWindowController.swift */,
+				B100000013 /* FocusEnforcer.swift */,
+				B100000014 /* AnswerLogger.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		G150000001 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B100000017 /* questions.json */,
+				B100000018 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		G200000001 /* GoToSleepDaemon */ = {
+			isa = PBXGroup;
+			children = (
+				B200000001 /* main.swift */,
+				B200000002 /* Info.plist */,
+			);
+			path = GoToSleepDaemon;
+			sourceTree = "<group>";
+		};
+		G300000001 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B100000015 /* Paths.swift */,
+				B100000016 /* TimeCheck.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		G400000001 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B300000001 /* com.gotosleep.daemon.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		G500000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				P100000001 /* GoToSleep.app */,
+				P200000001 /* GoToSleepDaemon */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		T100000001 /* GoToSleep */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = X100000001 /* Build configuration list for PBXNativeTarget "GoToSleep" */;
+			buildPhases = (
+				S100000001 /* Sources */,
+				F100000001 /* Frameworks */,
+				R100000001 /* Resources */,
+				C100000001 /* Copy Daemon */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GoToSleep;
+			productName = GoToSleep;
+			productReference = P100000001 /* GoToSleep.app */;
+			productType = "com.apple.product-type.application";
+		};
+		T200000001 /* GoToSleepDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = X200000001 /* Build configuration list for PBXNativeTarget "GoToSleepDaemon" */;
+			buildPhases = (
+				S200000001 /* Sources */,
+				F200000001 /* Frameworks */,
+				C200000001 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GoToSleepDaemon;
+			productName = GoToSleepDaemon;
+			productReference = P200000001 /* GoToSleepDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PRJ0000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					T100000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					T200000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = X000000001 /* Build configuration list for PBXProject "GoToSleep" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G000000001;
+			productRefGroup = G500000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				T100000001 /* GoToSleep */,
+				T200000001 /* GoToSleepDaemon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		R100000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000017 /* questions.json in Resources */,
+				A100000018 /* Assets.xcassets in Resources */,
+				A300000001 /* com.gotosleep.daemon.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		S100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000001 /* GoToSleepApp.swift in Sources */,
+				A100000002 /* AppDelegate.swift in Sources */,
+				A100000003 /* OverlayView.swift in Sources */,
+				A100000004 /* QuestionView.swift in Sources */,
+				A100000005 /* SettingsView.swift in Sources */,
+				A100000006 /* MenuBarView.swift in Sources */,
+				A100000007 /* PermissionsGuideView.swift in Sources */,
+				A100000008 /* Question.swift in Sources */,
+				A100000009 /* QuestionStore.swift in Sources */,
+				A100000010 /* SessionLog.swift in Sources */,
+				A100000011 /* AppSettings.swift in Sources */,
+				A100000012 /* OverlayWindowController.swift in Sources */,
+				A100000013 /* FocusEnforcer.swift in Sources */,
+				A100000014 /* AnswerLogger.swift in Sources */,
+				A100000015 /* Paths.swift in Sources */,
+				A100000016 /* TimeCheck.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		S200000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A200000001 /* main.swift in Sources */,
+				A200000002 /* Paths.swift in Sources */,
+				A200000003 /* TimeCheck.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		/* Project-level Debug */
+		D000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		/* Project-level Release */
+		D000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		/* GoToSleep target Debug */
+		D100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = GoToSleep/GoToSleep.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GoToSleep/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gotosleep.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		/* GoToSleep target Release */
+		D100000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = GoToSleep/GoToSleep.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GoToSleep/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gotosleep.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		/* GoToSleepDaemon target Debug */
+		D200000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gotosleep.daemon";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		/* GoToSleepDaemon target Release */
+		D200000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gotosleep.daemon";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		X000000001 /* Build configuration list for PBXProject "GoToSleep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D000000001 /* Debug */,
+				D000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		X100000001 /* Build configuration list for PBXNativeTarget "GoToSleep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D100000001 /* Debug */,
+				D100000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		X200000001 /* Build configuration list for PBXNativeTarget "GoToSleepDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D200000001 /* Debug */,
+				D200000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = PRJ0000001 /* Project object */;
+}
