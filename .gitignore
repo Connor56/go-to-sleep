@@ -21,6 +21,9 @@ xcuserdata/
 Packages/
 Package.resolved
 
+# Swift build server config
+buildServer.json
+
 # Old Rust artifacts
 /target/
 **/*.rs.bk
