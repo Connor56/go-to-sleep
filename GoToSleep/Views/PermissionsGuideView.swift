@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 
 struct PermissionsGuideView: View {
+    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     @ObservedObject private var settings = AppSettings.shared
     @State private var accessibilityGranted = false
     @State private var daemonRegistered = false
@@ -87,27 +88,35 @@ struct PermissionsGuideView: View {
         .padding(40)
         .frame(width: 540, height: 480)
         .onAppear {
+            print("\(debugMarker) PermissionsGuideView appeared")
             checkStatus()
         }
     }
 
     private func requestAccessibility() {
+        print("\(debugMarker) requestAccessibility called")
         let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue(): true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
         // Give the user a moment, then re-check
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            print("\(debugMarker) requestAccessibility delayed status check")
             checkStatus()
         }
     }
 
     private func registerDaemon() {
+        print("\(debugMarker) registerDaemon called from setup guide")
         if let delegate = NSApp.delegate as? AppDelegate {
             delegate.registerDaemon()
             daemonRegistered = true
+            print("\(debugMarker) daemonRegistered set to true")
+        } else {
+            print("\(debugMarker) ERROR: NSApp.delegate is not AppDelegate in registerDaemon")
         }
     }
 
     private func checkStatus() {
         accessibilityGranted = AXIsProcessTrusted()
+        print("\(debugMarker) checkStatus accessibilityGranted=\(accessibilityGranted)")
     }
 }

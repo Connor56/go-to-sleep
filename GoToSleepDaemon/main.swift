@@ -1,6 +1,8 @@
 import AppKit
 import Foundation
 
+let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")
+
 // MARK: - Main loop
 
 func main() {
@@ -29,8 +31,10 @@ func main() {
             }
         }
 
-        // Check if the main app is already running with an overlay
+        // If the main app is running (menu bar mode), tell it to show the overlay.
         if isMainAppRunning() {
+            print("[GoToSleepDaemon] Main app already running — requesting overlay via distributed notification")
+            requestOverlayFromRunningApp()
             continue
         }
 
@@ -71,7 +75,7 @@ struct DaemonSettings {
 }
 
 func readSettings() -> DaemonSettings {
-    let defaults = UserDefaults(suiteName: "com.gotosleep.app")
+    let defaults = UserDefaults(suiteName: "com.gotosleep.shared")
     return DaemonSettings(
         isEnabled: defaults?.object(forKey: "isEnabled") as? Bool ?? true,
         bedtimeStartHour: defaults?.object(forKey: "bedtimeStartHour") as? Int ?? 21,
@@ -111,6 +115,13 @@ func resolveMainAppPath() -> String? {
 func isMainAppRunning() -> Bool {
     let apps = NSWorkspace.shared.runningApplications
     return apps.contains { $0.bundleIdentifier == "com.gotosleep.app" }
+}
+
+func requestOverlayFromRunningApp() {
+    DistributedNotificationCenter.default().post(
+        name: showOverlayNotificationName,
+        object: "com.gotosleep.app"
+    )
 }
 
 /// Launch the main app and wait for it to exit.

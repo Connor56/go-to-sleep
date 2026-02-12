@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct QuestionView: View {
+    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     let question: Question
     @Binding var answer: String
 
@@ -19,6 +20,9 @@ struct QuestionView: View {
                 multipleChoiceInput
             }
         }
+        .onAppear {
+            print("\(debugMarker) QuestionView appeared id=\(question.id) type=\(question.type)")
+        }
     }
 
     private var freeTextInput: some View {
@@ -36,6 +40,7 @@ struct QuestionView: View {
         VStack(spacing: 12) {
             ForEach(question.choices ?? [], id: \.self) { choice in
                 Button {
+                    print("\(debugMarker) QuestionView choice selected questionId=\(question.id) choice=\(choice)")
                     answer = choice
                 } label: {
                     HStack {

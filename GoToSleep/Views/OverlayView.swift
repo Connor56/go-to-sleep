@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct OverlayView: View {
+    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     let questions: [Question]
     let onComplete: () -> Void
 
@@ -68,13 +69,21 @@ struct OverlayView: View {
             }
             .padding(40)
         }
+        .onAppear {
+            print("\(debugMarker) OverlayView appeared with questionCount=\(questions.count)")
+        }
+        .onChange(of: currentIndex) { newValue in
+            print("\(debugMarker) OverlayView currentIndex changed -> \(newValue)")
+        }
     }
 
     private func advance() {
+        print("\(debugMarker) OverlayView.advance called index=\(currentIndex)")
         guard isCurrentAnswered else { return }
 
         // Log this answer
         let q = questions[currentIndex]
+        print("\(debugMarker) Logging answer for questionId=\(q.id)")
         AnswerLogger.log(
             questionId: q.id,
             questionText: q.text,
@@ -82,11 +91,13 @@ struct OverlayView: View {
         )
 
         if isLastQuestion {
+            print("\(debugMarker) Last question answered, calling onComplete")
             onComplete()
         } else {
             withAnimation(.easeInOut(duration: 0.3)) {
                 currentIndex += 1
             }
+            print("\(debugMarker) Moving to next question index=\(currentIndex)")
         }
     }
 }

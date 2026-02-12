@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct MenuBarView: View {
+    let appDelegate: AppDelegate
     @ObservedObject private var settings = AppSettings.shared
+    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
 
     var body: some View {
         VStack(spacing: 4) {
@@ -16,13 +18,16 @@ struct MenuBarView: View {
             Divider()
 
             Button("Test Overlay") {
-                if let delegate = NSApp.delegate as? AppDelegate {
-                    delegate.showOverlay()
-                }
+                print("\(debugMarker) Test Overlay clicked")
+                appDelegate.showOverlay()
             }
 
             Button("Settings...") {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                print("\(debugMarker) Settings button clicked")
+                DispatchQueue.main.async {
+                    print("\(debugMarker) Forwarding to AppDelegate.showSettingsWindow()")
+                    appDelegate.showSettingsWindow()
+                }
             }
             .keyboardShortcut(",", modifiers: .command)
 
@@ -32,6 +37,10 @@ struct MenuBarView: View {
                 NSApp.terminate(nil)
             }
             .keyboardShortcut("q", modifiers: .command)
+        }
+        .onAppear {
+            print("\(debugMarker) MenuBarView appeared")
+            print("\(debugMarker) statusText=\(statusText)")
         }
     }
 

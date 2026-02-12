@@ -16,28 +16,40 @@ It's genuinely hard to dismiss. A background daemon relaunches the app if you ki
 ## Requirements
 
 - **macOS 13 (Ventura)** or later
-- **Xcode 15** or later
+- **Xcode Command Line Tools** (provides the Swift compiler and `xcodebuild`)
 - Accessibility permissions (for kiosk mode)
 
 ## Getting Started
 
-### 1. Install Xcode
+### 1. Install Xcode Command Line Tools
 
-Download Xcode from the Mac App Store. It's Apple's IDE — it includes the Swift compiler, Interface Builder, and everything needed to build macOS apps.
+You just need the command-line tools, not the full Xcode IDE:
 
-### 2. Open the Project
-
-```
-open GoToSleep.xcodeproj
+```bash
+xcode-select --install
 ```
 
-This opens the project in Xcode. You'll see two targets in the sidebar:
-- **GoToSleep** — the main app (menu bar icon + overlay UI)
-- **GoToSleepDaemon** — the background process that monitors bedtime
+If you already have the full Xcode app installed, this is already included.
 
-### 3. Build and Run
+### 2. Build
 
-Press **Cmd+R** in Xcode (or Product → Run). The app appears as a moon icon in your menu bar — no dock icon, by design.
+```bash
+xcodebuild -project GoToSleep.xcodeproj -target GoToSleep -target GoToSleepDaemon -configuration Debug build
+```
+
+This compiles both targets and puts the results in `./build/Debug/`.
+
+### 3. Run
+
+```bash
+# Run the app normally (menu bar icon)
+./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep
+
+# Or test the overlay immediately
+./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime
+```
+
+The app appears as a moon icon in your menu bar — no dock icon, by design.
 
 ### 4. Grant Accessibility Permissions
 
@@ -46,6 +58,17 @@ On first launch, the app will guide you through granting Accessibility permissio
 **System Settings → Privacy & Security → Accessibility** → toggle on GoToSleep
 
 Without Accessibility permissions, the overlay still works but can be dismissed.
+
+### Hot Reloading
+
+There's no hot reload from the terminal. SwiftUI Previews (live UI updates as you edit) only work inside the Xcode IDE. From the terminal, your iteration loop is:
+
+```bash
+# Edit code → rebuild → relaunch
+xcodebuild -project GoToSleep.xcodeproj -target GoToSleep -configuration Debug build && ./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep
+```
+
+Incremental builds are fast (a few seconds) since only changed files recompile. If you want live previews while working on the UI, open the project in Xcode (`open GoToSleep.xcodeproj`) and use the Canvas preview pane — but this is optional.
 
 ## Project Structure
 
@@ -100,7 +123,7 @@ A Scene is a top-level piece of UI that the system manages. We use two:
 - `Settings` — the preferences window (opened with Cmd+,)
 
 ### `@AppStorage`
-A property wrapper that reads/writes to `UserDefaults` (macOS's key-value preferences store). When you write `@AppStorage("key") var value = default`, it automatically loads the saved value on launch and saves changes. We use a shared suite (`com.gotosleep.app`) so the daemon can read the same settings.
+A property wrapper that reads/writes to `UserDefaults` (macOS's key-value preferences store). When you write `@AppStorage("key") var value = default`, it automatically loads the saved value on launch and saves changes. We use a shared suite (`com.gotosleep.shared`) so the daemon can read the same settings.
 
 ### `Codable`
 A protocol that lets you convert Swift types to/from JSON (or other formats). Our `Question` struct is `Codable`, which means `JSONDecoder` can turn JSON data into `Question` instances automatically — no manual parsing needed.
@@ -221,13 +244,18 @@ Edit `AppSettings.swift`, change the default value for `questionsPerSession`.
 
 ### Testing the Overlay
 
-Click the menu bar icon → **Test Overlay**. This triggers the overlay immediately regardless of bedtime settings.
+From the terminal:
+```bash
+./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime
+```
+
+Or if the app is already running, click the menu bar icon → **Test Overlay**. Both trigger the overlay immediately regardless of bedtime settings.
 
 ## Data Storage
 
 | Data | Location | Format |
 |------|----------|--------|
-| Settings | UserDefaults (shared suite `com.gotosleep.app`) | Managed by macOS |
+| Settings | UserDefaults (shared suite `com.gotosleep.shared`) | Managed by macOS |
 | Answer log | `~/Library/Application Support/GoToSleep/answers.jsonl` | JSON Lines (one entry per line) |
 | Questions | Bundled in app | `questions.json` |
 | Session markers | `~/Library/Application Support/GoToSleep/session-*` | Timestamp files |
@@ -248,7 +276,11 @@ cat /tmp/go-to-sleep-daemon.stderr.log
 ```
 
 ### App doesn't appear in menu bar
-Make sure you're running the **GoToSleep** target (not GoToSleepDaemon). The app has `LSUIElement = YES`, which means no dock icon — look in the menu bar for the moon icon.
+Make sure you're running `GoToSleep.app`, not the daemon binary directly. The app has `LSUIElement = YES`, which means no dock icon — look in the menu bar for the moon icon.
 
 ### Questions don't load
-Make sure `questions.json` is included in the app bundle. In Xcode, check that it appears under **GoToSleep → Resources** in the project navigator and is listed in the target's "Copy Bundle Resources" build phase.
+Make sure `questions.json` is included in the app bundle. After building, verify it's there:
+
+```bash
+ls ./build/Debug/GoToSleep.app/Contents/Resources/questions.json
+```

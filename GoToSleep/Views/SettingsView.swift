@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject private var settings = AppSettings.shared
+    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
 
     private let gracePeriodOptions = [
         (15, "15 minutes"),
@@ -43,6 +44,24 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .frame(width: 400, height: 320)
+        .onAppear {
+            print("\(debugMarker) SettingsView appeared")
+        }
+        .onChange(of: settings.isEnabled) { newValue in
+            print("\(debugMarker) settings.isEnabled changed -> \(newValue)")
+        }
+        .onChange(of: settings.bedtimeStartHour) { newValue in
+            print("\(debugMarker) settings.bedtimeStartHour changed -> \(newValue)")
+        }
+        .onChange(of: settings.bedtimeEndHour) { newValue in
+            print("\(debugMarker) settings.bedtimeEndHour changed -> \(newValue)")
+        }
+        .onChange(of: settings.questionsPerSession) { newValue in
+            print("\(debugMarker) settings.questionsPerSession changed -> \(newValue)")
+        }
+        .onChange(of: settings.gracePeriodMinutes) { newValue in
+            print("\(debugMarker) settings.gracePeriodMinutes changed -> \(newValue)")
+        }
     }
 
     private func formatHour(_ hour: Int) -> String {
