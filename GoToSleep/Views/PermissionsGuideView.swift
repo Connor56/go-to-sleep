@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 
 struct PermissionsGuideView: View {
+    let appDelegate: AppDelegate
     private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     @ObservedObject private var settings = AppSettings.shared
     @State private var accessibilityGranted = false
@@ -106,13 +107,9 @@ struct PermissionsGuideView: View {
 
     private func registerDaemon() {
         print("\(debugMarker) registerDaemon called from setup guide")
-        if let delegate = NSApp.delegate as? AppDelegate {
-            delegate.registerDaemon()
-            daemonRegistered = true
-            print("\(debugMarker) daemonRegistered set to true")
-        } else {
-            print("\(debugMarker) ERROR: NSApp.delegate is not AppDelegate in registerDaemon")
-        }
+        appDelegate.registerDaemon()
+        daemonRegistered = true
+        print("\(debugMarker) daemonRegistered set to true")
     }
 
     private func checkStatus() {
