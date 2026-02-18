@@ -13,6 +13,7 @@ enum Paths {
     static let sessionCompletedPath = appSupportDir.appendingPathComponent("session-completed")
     static let answersPath = appSupportDir.appendingPathComponent("answers.jsonl")
     static let killLogPath = appSupportDir.appendingPathComponent("kills.json")
+    static let audioMutedPath = appSupportDir.appendingPathComponent("audio-muted")
 
     static func ensureDirectoryExists() {
         print("\(debugMarker) ensureDirectoryExists at \(appSupportDir.path)")
