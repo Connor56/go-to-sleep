@@ -26,6 +26,7 @@
 		A100000016 /* TimeCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000016; };
 		A100000017 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = B100000017; };
 		A100000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B100000018; };
+		A100000019 /* AudioMuter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000021; };
 
 		/* GoToSleepDaemon sources */
 		A200000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B200000001; };
@@ -81,6 +82,7 @@
 		B100000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B100000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B100000020 /* GoToSleep.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoToSleep.entitlements; sourceTree = "<group>"; };
+		B100000021 /* AudioMuter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMuter.swift; sourceTree = "<group>"; };
 
 		/* GoToSleepDaemon */
 		P200000001 /* GoToSleepDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GoToSleepDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +174,7 @@
 				B100000012 /* OverlayWindowController.swift */,
 				B100000013 /* FocusEnforcer.swift */,
 				B100000014 /* AnswerLogger.swift */,
+				B100000021 /* AudioMuter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				A100000014 /* AnswerLogger.swift in Sources */,
 				A100000015 /* Paths.swift in Sources */,
 				A100000016 /* TimeCheck.swift in Sources */,
+				A100000019 /* AudioMuter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
