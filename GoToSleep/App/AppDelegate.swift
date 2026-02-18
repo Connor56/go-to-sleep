@@ -7,12 +7,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")
     private let overlayController = OverlayWindowController()
     private let focusEnforcer = FocusEnforcer()
+    private let audioMuter = AudioMuter()
     private let questionStore = QuestionStore()
     private var isShowingOverlay = false
     private var settingsWindowController: NSWindowController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("\(debugMarker) applicationDidFinishLaunching args=\(CommandLine.arguments)")
+        audioMuter.restoreIfNeeded()
         registerOverlayNotificationObserver()
 
         // Check if launched with --bedtime flag (by the daemon)
@@ -40,6 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
+        audioMuter.mute()
         focusEnforcer.start()
         NSApp.activate(ignoringOtherApps: true)
 
@@ -51,6 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func dismissOverlay() {
         print("\(debugMarker) dismissOverlay called")
         overlayController.dismiss()
+        audioMuter.unmute()
         focusEnforcer.stop()
         isShowingOverlay = false
     }
