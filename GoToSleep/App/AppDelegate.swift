@@ -2,7 +2,8 @@ import AppKit
 import ServiceManagement
 import SwiftUI
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+@NSApplicationMain
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     private let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")
     private let overlayController = OverlayWindowController()
@@ -11,18 +12,102 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let questionStore = QuestionStore()
     private var isShowingOverlay = false
     private var settingsWindowController: NSWindowController?
+    private var statusItem: NSStatusItem!
+
+    // MARK: - Lifecycle
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("\(debugMarker) applicationDidFinishLaunching args=\(CommandLine.arguments)")
+
+        setupStatusItem()
         audioMuter.restoreIfNeeded()
         registerOverlayNotificationObserver()
 
-        // Check if launched with --bedtime flag (by the daemon)
         if CommandLine.arguments.contains("--bedtime") {
             print("\(debugMarker) Detected --bedtime launch, showing overlay")
             showOverlay()
         }
     }
+
+    // MARK: - Status Item
+
+    private func setupStatusItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        if let button = statusItem.button {
+            button.image = NSImage(systemSymbolName: "moon.fill", accessibilityDescription: "Go To Sleep")
+        }
+        let menu = NSMenu()
+        menu.delegate = self
+        statusItem.menu = menu
+    }
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+
+        let settings = AppSettings.shared
+
+        let enabledItem = NSMenuItem(title: "Enabled", action: #selector(toggleEnabled), keyEquivalent: "")
+        enabledItem.state = settings.isEnabled ? .on : .off
+        menu.addItem(enabledItem)
+
+        menu.addItem(.separator())
+
+        let statusItem = NSMenuItem(title: statusText(), action: nil, keyEquivalent: "")
+        statusItem.isEnabled = false
+        menu.addItem(statusItem)
+
+        menu.addItem(.separator())
+
+        menu.addItem(NSMenuItem(title: "Test Overlay", action: #selector(testOverlayClicked), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(settingsClicked), keyEquivalent: ","))
+
+        menu.addItem(.separator())
+
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+    }
+
+    @objc private func toggleEnabled() {
+        AppSettings.shared.isEnabled.toggle()
+        print("\(debugMarker) Toggled isEnabled -> \(AppSettings.shared.isEnabled)")
+    }
+
+    @objc private func testOverlayClicked() {
+        print("\(debugMarker) Test Overlay clicked")
+        showOverlay()
+    }
+
+    @objc private func settingsClicked() {
+        print("\(debugMarker) Settings menu item clicked")
+        showSettingsWindow()
+    }
+
+    private func statusText() -> String {
+        let settings = AppSettings.shared
+        if !settings.isEnabled {
+            return "Disabled"
+        }
+
+        let start = formatHour(settings.bedtimeStartHour)
+        let end = formatHour(settings.bedtimeEndHour)
+
+        if TimeCheck.isWithinBedtimeWindow(startHour: settings.bedtimeStartHour,
+                                            endHour: settings.bedtimeEndHour) {
+            return "Bedtime active (\(start)–\(end))"
+        } else {
+            return "Next bedtime: \(start)–\(end)"
+        }
+    }
+
+    private func formatHour(_ hour: Int) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h a"
+        var components = DateComponents()
+        components.hour = hour
+        let date = Calendar.current.date(from: components) ?? Date()
+        return formatter.string(from: date)
+    }
+
+    // MARK: - Overlay
 
     func showOverlay() {
         print("\(debugMarker) showOverlay called. isShowingOverlay=\(isShowingOverlay)")
@@ -59,6 +144,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         isShowingOverlay = false
     }
 
+    // MARK: - Settings Window
+
     func showSettingsWindow() {
         print("\(debugMarker) AppDelegate.showSettingsWindow() called")
         NSApp.activate(ignoringOtherApps: true)
@@ -82,9 +169,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindowController?.window?.makeKeyAndOrderFront(nil)
     }
 
+    // MARK: - Session
+
     private func completeSession() {
         print("\(debugMarker) completeSession called")
-        // Write completion marker so the daemon knows we finished legitimately
         Paths.writeTimestamp(to: Paths.sessionCompletedPath)
         dismissOverlay()
     }
