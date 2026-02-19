@@ -1,5 +1,4 @@
 import AppKit
-import ServiceManagement
 import SwiftUI
 
 @NSApplicationMain
@@ -191,31 +190,82 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - Daemon Registration
 
+    private var launchAgentPlistURL: URL {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        return home.appendingPathComponent("Library/LaunchAgents/com.gotosleep.daemon.plist")
+    }
+
+    private func daemonBinaryPath() -> String {
+        let bundle = Bundle.main
+        return bundle.bundlePath + "/Contents/MacOS/GoToSleepDaemon"
+    }
+
     func registerDaemon() {
         print("\(debugMarker) registerDaemon called")
-        if #available(macOS 13.0, *) {
-            let service = SMAppService.agent(plistName: "com.gotosleep.daemon.plist")
-            do {
-                try service.register()
-                print("\(debugMarker) registerDaemon succeeded")
-            } catch {
-                print("Failed to register daemon: \(error)")
-                print("\(debugMarker) registerDaemon failed: \(error)")
-            }
+
+        let plistURL = launchAgentPlistURL
+        let binaryPath = daemonBinaryPath()
+
+        let plistContent: [String: Any] = [
+            "Label": "com.gotosleep.daemon",
+            "ProgramArguments": [binaryPath],
+            "KeepAlive": true,
+            "RunAtLoad": true,
+            "StandardOutPath": "/tmp/go-to-sleep-daemon.stdout.log",
+            "StandardErrorPath": "/tmp/go-to-sleep-daemon.stderr.log",
+        ]
+
+        // Ensure ~/Library/LaunchAgents exists
+        let launchAgentsDir = plistURL.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true)
+
+        // Write the plist
+        let data = try? PropertyListSerialization.data(fromPropertyList: plistContent, format: .xml, options: 0)
+        guard let data = data else {
+            print("\(debugMarker) registerDaemon failed: could not serialize plist")
+            return
+        }
+
+        do {
+            try data.write(to: plistURL)
+            print("\(debugMarker) Wrote launch agent plist to \(plistURL.path)")
+        } catch {
+            print("\(debugMarker) registerDaemon failed to write plist: \(error)")
+            return
+        }
+
+        // Load via launchctl
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        process.arguments = ["load", plistURL.path]
+        do {
+            try process.run()
+            process.waitUntilExit()
+            print("\(debugMarker) registerDaemon launchctl load exit code: \(process.terminationStatus)")
+        } catch {
+            print("\(debugMarker) registerDaemon launchctl load failed: \(error)")
         }
     }
 
     func unregisterDaemon() {
         print("\(debugMarker) unregisterDaemon called")
-        if #available(macOS 13.0, *) {
-            let service = SMAppService.agent(plistName: "com.gotosleep.daemon.plist")
-            do {
-                try service.unregister()
-                print("\(debugMarker) unregisterDaemon succeeded")
-            } catch {
-                print("Failed to unregister daemon: \(error)")
-                print("\(debugMarker) unregisterDaemon failed: \(error)")
-            }
+
+        let plistURL = launchAgentPlistURL
+
+        // Unload via launchctl
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        process.arguments = ["unload", plistURL.path]
+        do {
+            try process.run()
+            process.waitUntilExit()
+            print("\(debugMarker) unregisterDaemon launchctl unload exit code: \(process.terminationStatus)")
+        } catch {
+            print("\(debugMarker) unregisterDaemon launchctl unload failed: \(error)")
         }
+
+        // Remove the plist file
+        try? FileManager.default.removeItem(at: plistURL)
+        print("\(debugMarker) unregisterDaemon removed plist at \(plistURL.path)")
     }
 }
