@@ -251,6 +251,17 @@ From the terminal:
 
 Or if the app is already running, click the menu bar icon → **Test Overlay**. Both trigger the overlay immediately regardless of bedtime settings.
 
+There's also a small "Dismiss" button in the top-right corner of the overlay for quick dismissal during testing.
+
+To auto-kill the app after a set time (useful so kiosk mode doesn't lock you out), run it in the background with a `sleep`+`kill`:
+
+```bash
+./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime &
+sleep 30 && kill $!
+```
+
+This gives you 30 seconds before the process is terminated. Adjust the number as needed.
+
 ## Data Storage
 
 | Data | Location | Format |

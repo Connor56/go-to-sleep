@@ -1,7 +1,6 @@
 import AppKit
 import SwiftUI
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
     private let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")

@@ -68,7 +68,11 @@ private struct TransparentTextEditor: NSViewRepresentable {
     @Binding var text: String
 
     func makeNSView(context: Context) -> NSScrollView {
-        let textView = NSTextView()
+        let scrollView = NSScrollView()
+        scrollView.hasVerticalScroller = true
+        scrollView.drawsBackground = false
+
+        let textView = NSTextView(frame: scrollView.bounds)
         textView.isRichText = false
         textView.drawsBackground = false
         textView.font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
@@ -80,9 +84,16 @@ private struct TransparentTextEditor: NSViewRepresentable {
         textView.delegate = context.coordinator
         textView.textContainerInset = NSSize(width: 8, height: 8)
 
-        let scrollView = NSScrollView()
-        scrollView.hasVerticalScroller = true
-        scrollView.drawsBackground = false
+        // Critical: configure sizing so the text view fills the scroll view
+        // and properly accepts clicks / keyboard input
+        textView.minSize = NSSize(width: 0, height: 0)
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        textView.isVerticallyResizable = true
+        textView.isHorizontallyResizable = false
+        textView.autoresizingMask = [.width]
+        textView.textContainer?.containerSize = NSSize(width: scrollView.contentSize.width, height: CGFloat.greatestFiniteMagnitude)
+        textView.textContainer?.widthTracksTextView = true
+
         scrollView.documentView = textView
         return scrollView
     }

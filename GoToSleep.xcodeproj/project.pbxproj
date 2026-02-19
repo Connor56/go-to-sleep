@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		/* GoToSleep app sources */
+		A100000020 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000022; };
 		A100000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000002; };
 		A100000003 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000003; };
 		A100000004 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000004; };
@@ -60,6 +61,7 @@
 /* Begin PBXFileReference section */
 		/* GoToSleep app */
 		P100000001 /* GoToSleep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoToSleep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B100000022 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		B100000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B100000003 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		B100000004 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 		G110000001 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				B100000022 /* main.swift */,
 				B100000002 /* AppDelegate.swift */,
 			);
 			path = App;
@@ -310,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A100000020 /* main.swift in Sources */,
 				A100000002 /* AppDelegate.swift in Sources */,
 				A100000003 /* OverlayView.swift in Sources */,
 				A100000004 /* QuestionView.swift in Sources */,

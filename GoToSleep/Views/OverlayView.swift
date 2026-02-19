@@ -37,6 +37,25 @@ struct OverlayView: View {
             )
             .ignoresSafeArea()
 
+            // Debug dismiss button — top-right corner
+            VStack {
+                HStack {
+                    Spacer()
+                    Button("Dismiss") {
+                        print("\(debugMarker) Debug dismiss button pressed")
+                        onComplete()
+                    }
+                    .buttonStyle(.plain)
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.4))
+                    .padding(8)
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(6)
+                    .padding(16)
+                }
+                Spacer()
+            }
+
             VStack(spacing: 40) {
                 Spacer()
 
