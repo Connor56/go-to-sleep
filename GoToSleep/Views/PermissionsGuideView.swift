@@ -82,7 +82,7 @@ struct PermissionsGuideView: View {
                 Button("Done") {
                     settings.hasCompletedSetup = true
                 }
-                .buttonStyle(.borderedProminent)
+                .keyboardShortcut(.defaultAction)
                 .disabled(!accessibilityGranted)
             }
         }
