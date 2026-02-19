@@ -13,7 +13,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("Schedule") {
+            Section(header: Text("Schedule")) {
                 Toggle("Enabled", isOn: $settings.isEnabled)
 
                 Picker("Bedtime starts at", selection: $settings.bedtimeStartHour) {
@@ -29,12 +29,12 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Questions") {
+            Section(header: Text("Questions")) {
                 Stepper("Questions per session: \(settings.questionsPerSession)",
                         value: $settings.questionsPerSession, in: 1...10)
             }
 
-            Section("After Completion") {
+            Section(header: Text("After Completion")) {
                 Picker("Grace period", selection: $settings.gracePeriodMinutes) {
                     ForEach(gracePeriodOptions, id: \.0) { value, label in
                         Text(label).tag(value)
@@ -42,7 +42,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .formStyle(.grouped)
         .frame(width: 400, height: 320)
         .onAppear {
             print("\(debugMarker) SettingsView appeared")
