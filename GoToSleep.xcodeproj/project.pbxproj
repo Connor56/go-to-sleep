@@ -34,6 +34,9 @@
 
 		/* Daemon plist copied into app bundle */
 		A300000001 /* com.gotosleep.daemon.plist in Resources */ = {isa = PBXBuildFile; fileRef = B300000001; };
+
+		/* Daemon binary copied into app bundle */
+		A400000001 /* GoToSleepDaemon in Copy Daemon */ = {isa = PBXBuildFile; fileRef = P200000001 /* GoToSleepDaemon */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,8 +44,9 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 16;
+			dstSubfolderSpec = 6;
 			files = (
+				A400000001 /* GoToSleepDaemon in Copy Daemon */,
 			);
 			name = "Copy Daemon";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,6 +239,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E200000001 /* PBXTargetDependency */,
 			);
 			name = GoToSleep;
 			productName = GoToSleep;
@@ -259,6 +264,24 @@
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		E100000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PRJ0000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T200000001;
+			remoteInfo = GoToSleepDaemon;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		E200000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T200000001 /* GoToSleepDaemon */;
+			targetProxy = E100000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		PRJ0000001 /* Project object */ = {
