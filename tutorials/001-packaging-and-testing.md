@@ -82,6 +82,7 @@ Change it to:
 ```
 
 Two changes:
+
 - `dstSubfolderSpec` from `16` to `6` (copies into `Contents/MacOS/` instead of
   the products directory).
 - `A400000001` added to the `files` list (the build file entry you created in
@@ -165,7 +166,7 @@ pull in GoToSleepDaemon automatically.
 After the build succeeds, check the app bundle:
 
 ```bash
-ls build/Build/Products/Debug/GoToSleep.app/Contents/MacOS/
+ls build/Debug/GoToSleep.app/Contents/MacOS/
 ```
 
 You should see **both** files:
@@ -216,7 +217,7 @@ xcodebuild -project GoToSleep.xcodeproj \
   build
 ```
 
-The built app lands in `build/Build/Products/Release/GoToSleep.app`. You can
+The built app lands in `build/Release/GoToSleep.app`. You can
 copy it anywhere (e.g. `/Applications`) and double-click to run.
 
 ### What happens when someone else tries to run it?
@@ -251,7 +252,7 @@ xcodebuild -project GoToSleep.xcodeproj \
 ### 2. Verify the bundle structure
 
 ```bash
-find build/Build/Products/Debug/GoToSleep.app/Contents -type f | sort
+find build/Debug/GoToSleep.app/Contents -type f | sort
 ```
 
 You should see something like:
@@ -275,7 +276,7 @@ Contents/
 ### 3. Run the app
 
 ```bash
-open build/Build/Products/Debug/GoToSleep.app
+open build/Debug/GoToSleep.app
 ```
 
 Check:
@@ -288,7 +289,7 @@ Check:
 ### 4. Check code signing
 
 ```bash
-codesign -dvvv build/Build/Products/Debug/GoToSleep.app
+codesign -dvvv build/Debug/GoToSleep.app
 ```
 
 As long as it doesn't say "code object is not signed at all", you're good for
@@ -297,7 +298,7 @@ local testing. You'll likely see `Signature=adhoc` which is expected.
 Also check the embedded daemon is signed:
 
 ```bash
-codesign -dvvv build/Build/Products/Debug/GoToSleep.app/Contents/MacOS/GoToSleepDaemon
+codesign -dvvv build/Debug/GoToSleep.app/Contents/MacOS/GoToSleepDaemon
 ```
 
 ---
