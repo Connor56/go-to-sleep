@@ -11,6 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var isShowingOverlay = false
     private var settingsWindowController: NSWindowController?
     private var statusItem: NSStatusItem!
+    private var setupWindowController: NSWindowController?
 
     // MARK: - Lifecycle
 
@@ -21,10 +22,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         audioMuter.restoreIfNeeded()
         registerOverlayNotificationObserver()
 
+        showSetupGuideIfNeeded()
+
         if CommandLine.arguments.contains("--bedtime") {
             print("\(debugMarker) Detected --bedtime launch, showing overlay")
             showOverlay()
         }
+    }
+
+    // MARK: - Show the setup guide
+
+    private func showSetupGuideIfNeeded() {
+        guard !AppSettings.shared.hasCompletedSetup else { return }
+
+        print("\(debugMarker) showing setup guide for first launch")
+
+        NSApp.activate(ignoringOtherApps: true)
+
+        let guideView = PermissionsGuideView(appDelegate: self)
+        let hostingController = NSHostingController(rootView: guideView)
+        let window = NSWindow(contentViewController: hostingController)
+
+        window.title = "Go To Sleep - Setup"
+        window.styleMask = [.titled, .closable]
+        window.setContentSize(NSSize(width: 540, height: 480))
+        window.center()
+        window.isReleasedWhenClosed = false
+
+        setupWindowController = NSWindowController(window: window)
+        setupWindowController?.showWindow(nil)
+        window.makeKeyAndOrderFront(nil)
     }
 
     // MARK: - Status Item
