@@ -12,7 +12,12 @@ func main() {
     var killTimestamps: [Date] = []
 
     while true {
-        sleep(10)
+        // Still process events whilst waiting for 10 seconds
+        // This method is compatible with older macOS versions.
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 10))
+        
+        let timestamp = Date()
+        print("[GoToSleepDaemon] Running, and time is \(timestamp)")
 
         let settings = readSettings()
 
