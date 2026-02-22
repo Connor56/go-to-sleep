@@ -24,6 +24,10 @@ Package.resolved
 # Swift build server config
 buildServer.json
 
+# Packaging
+dmg-staging
+*.dmg
+
 # Old Rust artifacts
 /target/
 **/*.rs.bk
