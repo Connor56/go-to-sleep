@@ -204,14 +204,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private func registerOverlayNotificationObserver() {
         DistributedNotificationCenter.default().addObserver(
-            forName: showOverlayNotificationName,
+            self,
+            selector: #selector(handleOverlayNotification),
+            name: showOverlayNotificationName,
             object: "com.gotosleep.app",
-            queue: .main
-        ) { [weak self] _ in
-            print("\(self?.debugMarker ?? "[GTS_DEBUG_REMOVE_ME]") Received distributed overlay request")
-            self?.showOverlay()
-        }
+            suspensionBehavior: .deliverImmediately
+
+        )
         print("\(debugMarker) Registered distributed overlay observer")
+    }
+
+    @objc func handleOverlayNotification() {
+        // Needed to make sure the message is relayed correctly
+        print("\(self.debugMarker ?? "[GTS_DEBUG_REMOVE_ME]") Received distributed overlay request")
+        self.showOverlay()
     }
 
     // MARK: - Daemon Registration
