@@ -84,7 +84,7 @@ Applications folder on the right — they drag one to the other.
 
 ---
 
-## Step 3: Create the .dmg
+## Step 3: Create the .dmg (Simple Method)
 
 Use `hdiutil` (built into macOS) to create the disk image:
 
@@ -104,7 +104,9 @@ Flags explained:
 - `-ov` — overwrite if a `.dmg` with this name already exists
 - `-format UDZO` — compressed, read-only format (standard for distribution)
 
-The output is `GoToSleep-1.0.dmg` in your current directory.
+The output is `GoToSleep-1.0.dmg` in your current directory. This works, but
+the window that opens looks like a plain Finder folder. If you want the polished
+look you see from apps like 1Password, Figma, or Discord, read the next section.
 
 ### Test the .dmg
 
@@ -114,6 +116,187 @@ open GoToSleep-1.0.dmg
 
 Finder should mount a volume called "Go To Sleep" showing the app and the
 Applications shortcut. Try dragging the app to Applications.
+
+---
+
+## Step 3b: Create a Professional .dmg (Optional)
+
+The reason your `.dmg` looks like a plain folder while apps like 1Password have
+a slick drag-to-install window is that those `.dmg` files contain **embedded
+Finder view settings**: a custom background image, pre-positioned icons, a fixed
+window size, and the toolbar/sidebar hidden. `hdiutil` alone can't set any of
+this — it just packs files into an image.
+
+The polished `.dmg` is essentially a Finder window styled to look like a
+mini-installer, with a designed background image that has an arrow graphic
+saying "drag here".
+
+### What's inside a professional .dmg
+
+- A **background image** (e.g. 660x400 PNG) with your branding and an arrow
+  pointing from the app icon to the Applications folder icon
+- **Icon positions** set so the app sits on the left and the Applications
+  symlink sits on the right, aligned with the arrow in the background
+- **Finder view settings** baked into a `.DS_Store` file: icon view mode, large
+  icon size, hidden toolbar/sidebar, fixed window dimensions
+- The background image stored in a hidden `.background/` folder inside the
+  volume
+
+### Install create-dmg
+
+The easiest way to build one of these is with `create-dmg`, a shell script that
+automates all the Finder metadata manipulation:
+
+```bash
+brew install create-dmg
+```
+
+### Design a background image
+
+Create a PNG image at the exact size you want the `.dmg` window to be. A common
+size is **660 x 400 pixels**. The image should:
+
+- Have your app's branding/colours
+- Show an arrow pointing from left to right (where the app icon and Applications
+  icon will be positioned)
+- Optionally include your app name and a "Drag to install" label
+
+You can design this in Figma, Sketch, Photoshop, Pixelmator, or even Keynote
+(export a slide as PNG). Keep it simple — a dark gradient with a subtle arrow
+works well.
+
+Save it somewhere like `dmg-resources/background.png`.
+
+### Build the .dmg with create-dmg
+
+```bash
+# Create a directory for dmg resources if you haven't already
+mkdir -p dmg-resources
+
+# Build the professional .dmg
+create-dmg \
+  --volname "Go To Sleep" \
+  --volicon "GoToSleep/Resources/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" \
+  --background "dmg-resources/background.png" \
+  --window-pos 200 120 \
+  --window-size 660 400 \
+  --icon-size 128 \
+  --icon "GoToSleep.app" 160 200 \
+  --app-drop-link 500 200 \
+  --hide-extension "GoToSleep.app" \
+  --no-internet-enable \
+  GoToSleep-1.0.dmg \
+  dmg-staging/
+```
+
+Flags explained:
+
+- `--volname "Go To Sleep"` — volume name shown in Finder's title bar and
+  sidebar
+- `--volicon "..."` — the icon for the mounted volume itself (shown on the
+  desktop). Use your app icon. Omit this flag if you don't have an icon yet.
+- `--background "dmg-resources/background.png"` — your custom background image.
+  Gets copied into a hidden `.background/` folder inside the volume.
+- `--window-pos 200 120` — where the window appears on screen when opened (x y
+  from top-left). Pick something centred-ish.
+- `--window-size 660 400` — must match your background image dimensions exactly.
+- `--icon-size 128` — the size of the icons inside the window. 128px is the
+  sweet spot — large enough to see clearly, small enough to fit the layout.
+- `--icon "GoToSleep.app" 160 200` — positions the app icon at x=160, y=200
+  (centred vertically, left side of the window). Adjust these coordinates to
+  align with your background image's arrow.
+- `--app-drop-link 500 200` — creates the Applications folder shortcut and
+  positions it at x=500, y=200 (right side, same vertical position as the app).
+- `--hide-extension "GoToSleep.app"` — hides the `.app` extension so it shows
+  as just "GoToSleep".
+- `--no-internet-enable` — skips the legacy internet-enable flag (not needed on
+  modern macOS).
+
+### Tweaking the icon positions
+
+The x/y coordinates for `--icon` and `--app-drop-link` are relative to the
+window's content area. If things don't look right:
+
+1. Open the `.dmg` and see where the icons land.
+2. Adjust the coordinates and rebuild.
+3. The y coordinate is measured from the **top** of the window.
+
+A good starting point for a 660x400 window:
+
+| Element | x | y | Placement |
+|---------|---|---|-----------|
+| App icon | 160 | 200 | Left-centre |
+| Applications link | 500 | 200 | Right-centre |
+
+Adjust to match wherever your background image's arrow graphic points.
+
+### If you don't have a background image yet
+
+You can still get a cleaner look than the default by using `create-dmg` without
+`--background`. It will still set the icon positions, window size, and hide the
+toolbar, which is already a big improvement:
+
+```bash
+create-dmg \
+  --volname "Go To Sleep" \
+  --window-pos 200 120 \
+  --window-size 540 380 \
+  --icon-size 128 \
+  --icon "GoToSleep.app" 130 190 \
+  --app-drop-link 410 190 \
+  --hide-extension "GoToSleep.app" \
+  --no-internet-enable \
+  GoToSleep-1.0.dmg \
+  dmg-staging/
+```
+
+This gives you the clean two-icon layout on a plain white background, which is
+already much better than the raw Finder folder view.
+
+### The manual way (for reference)
+
+If you don't want to install `create-dmg`, you can do it by hand. This is
+tedious but educational:
+
+1. Create a **read-write** `.dmg`:
+   ```bash
+   hdiutil create \
+     -volname "Go To Sleep" \
+     -srcfolder dmg-staging \
+     -ov \
+     -format UDRW \
+     GoToSleep-rw.dmg
+   ```
+
+2. Mount it:
+   ```bash
+   hdiutil attach GoToSleep-rw.dmg
+   ```
+
+3. Open the mounted volume in Finder. Then manually:
+   - Switch to icon view (Cmd+1)
+   - Open View > Show View Options (Cmd+J)
+   - Set icon size to 128
+   - Set grid spacing to max
+   - Set background to your image (drag the PNG into the "Drag image here" well)
+   - Drag the two icons into position
+   - Resize the window to your desired size
+   - Hide the toolbar (View > Hide Toolbar) and sidebar (View > Hide Sidebar)
+
+4. Eject the volume:
+   ```bash
+   hdiutil detach /Volumes/Go\ To\ Sleep
+   ```
+
+5. Convert to read-only compressed format:
+   ```bash
+   hdiutil convert GoToSleep-rw.dmg \
+     -format UDZO \
+     -o GoToSleep-1.0.dmg
+   rm GoToSleep-rw.dmg
+   ```
+
+As you can see, `create-dmg` saves a lot of pain.
 
 ---
 
@@ -303,13 +486,27 @@ mkdir -p dmg-staging
 cp -R build/Release/GoToSleep.app dmg-staging/
 ln -s /Applications dmg-staging/Applications
 
-# Package
+# Package (simple)
 hdiutil create \
   -volname "Go To Sleep" \
   -srcfolder dmg-staging \
   -ov \
   -format UDZO \
   GoToSleep-1.0.dmg
+
+# Package (professional — requires: brew install create-dmg)
+create-dmg \
+  --volname "Go To Sleep" \
+  --background "dmg-resources/background.png" \
+  --window-pos 200 120 \
+  --window-size 660 400 \
+  --icon-size 128 \
+  --icon "GoToSleep.app" 160 200 \
+  --app-drop-link 500 200 \
+  --hide-extension "GoToSleep.app" \
+  --no-internet-enable \
+  GoToSleep-1.0.dmg \
+  dmg-staging/
 
 # Install
 open GoToSleep-1.0.dmg
