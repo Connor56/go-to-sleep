@@ -169,9 +169,19 @@ Save it somewhere like `dmg-resources/background.png`.
 
 ### Build the .dmg with create-dmg
 
+When using `create-dmg`, stage **only** the `.app` — do not add an `Applications`
+symlink to `dmg-staging/`. The `--app-drop-link` flag creates that link for you.
+If you add it yourself, create-dmg will try to create it again and hit
+`ln: .../Applications/Applications: File exists`.
+
 ```bash
 # Create a directory for dmg resources if you haven't already
 mkdir -p dmg-resources
+
+# Stage only the app (create-dmg adds the Applications link via --app-drop-link)
+rm -rf dmg-staging
+mkdir -p dmg-staging
+cp -R build/Release/GoToSleep.app dmg-staging/
 
 # Build the professional .dmg
 create-dmg \
@@ -212,6 +222,19 @@ Flags explained:
 - `--no-internet-enable` — skips the legacy internet-enable flag (not needed on
   modern macOS).
 
+#### Potential Issues
+
+If you see the following:
+
+```sh
+Making link to Applications dir...
+/Volumes/dmg.hO4HXl
+ln: /Volumes/dmg.hO4HXl/Applications/Applications: File exists
+```
+
+It's because you still have the the Applications symlink in the `dmg-staging` directory.
+Remove it and this error will go too.
+
 ### Tweaking the icon positions
 
 The x/y coordinates for `--icon` and `--app-drop-link` are relative to the
@@ -223,9 +246,9 @@ window's content area. If things don't look right:
 
 A good starting point for a 660x400 window:
 
-| Element | x | y | Placement |
-|---------|---|---|-----------|
-| App icon | 160 | 200 | Left-centre |
+| Element           | x   | y   | Placement    |
+| ----------------- | --- | --- | ------------ |
+| App icon          | 160 | 200 | Left-centre  |
 | Applications link | 500 | 200 | Right-centre |
 
 Adjust to match wherever your background image's arrow graphic points.
@@ -239,11 +262,12 @@ toolbar, which is already a big improvement:
 ```bash
 create-dmg \
   --volname "Go To Sleep" \
+  --volicon "GoToSleep/Resources/Assets.xcassets/AppIcon.appiconset/go-to-sleep-logo_512x512.png" \
   --window-pos 200 120 \
-  --window-size 540 380 \
+  --window-size 660 400 \
   --icon-size 128 \
-  --icon "GoToSleep.app" 130 190 \
-  --app-drop-link 410 190 \
+  --icon "GoToSleep.app" 160 200 \
+  --app-drop-link 500 200 \
   --hide-extension "GoToSleep.app" \
   --no-internet-enable \
   GoToSleep-1.0.dmg \
@@ -259,6 +283,7 @@ If you don't want to install `create-dmg`, you can do it by hand. This is
 tedious but educational:
 
 1. Create a **read-write** `.dmg`:
+
    ```bash
    hdiutil create \
      -volname "Go To Sleep" \
@@ -269,6 +294,7 @@ tedious but educational:
    ```
 
 2. Mount it:
+
    ```bash
    hdiutil attach GoToSleep-rw.dmg
    ```
@@ -284,6 +310,7 @@ tedious but educational:
    - Hide the toolbar (View > Hide Toolbar) and sidebar (View > Hide Sidebar)
 
 4. Eject the volume:
+
    ```bash
    hdiutil detach /Volumes/Go\ To\ Sleep
    ```
@@ -480,7 +507,7 @@ xcodebuild -project GoToSleep.xcodeproj \
   -configuration Release \
   clean build
 
-# Stage
+# Stage (for simple hdiutil: include Applications symlink)
 rm -rf dmg-staging
 mkdir -p dmg-staging
 cp -R build/Release/GoToSleep.app dmg-staging/
@@ -495,6 +522,8 @@ hdiutil create \
   GoToSleep-1.0.dmg
 
 # Package (professional — requires: brew install create-dmg)
+# Use a staging dir with only the .app (no Applications link); create-dmg adds it via --app-drop-link
+rm -rf dmg-staging && mkdir -p dmg-staging && cp -R build/Release/GoToSleep.app dmg-staging/
 create-dmg \
   --volname "Go To Sleep" \
   --background "dmg-resources/background.png" \
