@@ -13,8 +13,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Schedule")) {
-
+            Section {
                 Picker("Bedtime starts at", selection: $settings.bedtimeStartHour) {
                     ForEach(0..<24, id: \.self) { hour in
                         Text(formatHour(hour)).tag(hour)
@@ -25,23 +24,35 @@ struct SettingsView: View {
                     ForEach(0..<24, id: \.self) { hour in
                         Text(formatHour(hour)).tag(hour)
                     }
-                }
+                }.padding(.bottom, 32)
+            } header: {
+                Text("Schedule")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                
             }
 
-            Section(header: Text("Questions")) {
+            Section {
                 Stepper("Questions per session: \(settings.questionsPerSession)",
-                        value: $settings.questionsPerSession, in: 1...10)
+                        value: $settings.questionsPerSession, in: 1...10).padding(.bottom, 32)
+            } header: {
+                Text("Questions")
+                    .font(.title3)
+                    .fontWeight(.semibold)
             }
 
-            Section(header: Text("After Completion")) {
+            Section {
                 Picker("Grace period", selection: $settings.gracePeriodMinutes) {
                     ForEach(gracePeriodOptions, id: \.0) { value, label in
                         Text(label).tag(value)
                     }
                 }
+            } header: {
+                Text("After Completion")
+                    .font(.title3)
+                    .fontWeight(.semibold)
             }
         }
-        .frame(width: 400, height: 320)
         .onAppear {
             print("\(debugMarker) SettingsView appeared")
         }
@@ -60,6 +71,7 @@ struct SettingsView: View {
         .onChange(of: settings.gracePeriodMinutes) { newValue in
             print("\(debugMarker) settings.gracePeriodMinutes changed -> \(newValue)")
         }
+        .padding(.horizontal, 32)
     }
 
     private func formatHour(_ hour: Int) -> String {
