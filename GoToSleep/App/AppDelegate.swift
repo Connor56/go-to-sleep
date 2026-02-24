@@ -65,11 +65,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
     }
 
-    @objc private func toggleEnabled() {
-        AppSettings.shared.isEnabled.toggle()
-        print("\(debugMarker) Toggled isEnabled -> \(AppSettings.shared.isEnabled)")
-    }
-
     @objc private func testOverlayClicked() {
         print("\(debugMarker) Test Overlay clicked")
         showOverlay()
