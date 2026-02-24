@@ -21,7 +21,6 @@ func main() {
 
         let settings = readSettings()
 
-        guard settings.isEnabled else { continue }
         guard TimeCheck.isWithinBedtimeWindow(
             startHour: settings.bedtimeStartHour,
             endHour: settings.bedtimeEndHour
