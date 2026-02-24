@@ -59,8 +59,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Settings...", action: #selector(settingsClicked), keyEquivalent: ","))
 
         menu.addItem(.separator())
-
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
     }
 
     @objc private func testOverlayClicked() {
