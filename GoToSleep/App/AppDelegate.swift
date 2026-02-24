@@ -45,8 +45,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
 
-        let settings = AppSettings.shared
-
         menu.addItem(.separator())
 
         let statusItem = NSMenuItem(title: statusText(), action: nil, keyEquivalent: "")
