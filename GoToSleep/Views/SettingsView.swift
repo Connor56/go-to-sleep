@@ -14,7 +14,6 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Schedule")) {
-                Toggle("Enabled", isOn: $settings.isEnabled)
 
                 Picker("Bedtime starts at", selection: $settings.bedtimeStartHour) {
                     ForEach(0..<24, id: \.self) { hour in
