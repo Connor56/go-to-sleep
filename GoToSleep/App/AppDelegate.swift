@@ -21,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         setupStatusItem()
         audioMuter.restoreIfNeeded()
         registerOverlayNotificationObserver()
+        
+        registerDaemon()
 
         if CommandLine.arguments.contains("--bedtime") {
             print("\(debugMarker) Detected --bedtime launch, showing overlay")
