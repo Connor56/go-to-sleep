@@ -53,24 +53,6 @@ struct SettingsView: View {
                     .fontWeight(.semibold)
             }
         }
-        .onAppear {
-            print("\(debugMarker) SettingsView appeared")
-        }
-        .onChange(of: settings.isEnabled) { newValue in
-            print("\(debugMarker) settings.isEnabled changed -> \(newValue)")
-        }
-        .onChange(of: settings.bedtimeStartHour) { newValue in
-            print("\(debugMarker) settings.bedtimeStartHour changed -> \(newValue)")
-        }
-        .onChange(of: settings.bedtimeEndHour) { newValue in
-            print("\(debugMarker) settings.bedtimeEndHour changed -> \(newValue)")
-        }
-        .onChange(of: settings.questionsPerSession) { newValue in
-            print("\(debugMarker) settings.questionsPerSession changed -> \(newValue)")
-        }
-        .onChange(of: settings.gracePeriodMinutes) { newValue in
-            print("\(debugMarker) settings.gracePeriodMinutes changed -> \(newValue)")
-        }
         .padding(.horizontal, 32)
     }
 
