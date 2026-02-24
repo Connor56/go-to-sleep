@@ -47,10 +47,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let settings = AppSettings.shared
 
-        let enabledItem = NSMenuItem(title: "Enabled", action: #selector(toggleEnabled), keyEquivalent: "")
-        enabledItem.state = settings.isEnabled ? .on : .off
-        menu.addItem(enabledItem)
-
         menu.addItem(.separator())
 
         let statusItem = NSMenuItem(title: statusText(), action: nil, keyEquivalent: "")
