@@ -2,6 +2,7 @@ import AppKit
 import Foundation
 
 let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")
+let dismissOverlayNotificationName = Notification.Name("come.gotosleep.dismissOverlayNow")
 
 // MARK: - Main loop
 
@@ -27,6 +28,13 @@ func main() {
         endHour: settings.bedtimeEndHour
       )
     else {
+      // If the main app is running, dismiss the overlay
+      if isMainAppRunning() {
+        print(
+          "[GoToSleepDaemon] Main app already running - dismissing overlay"
+        )
+        requestOverlayDismissalFromRunningApp()
+      }
       continue
     }
 
@@ -130,6 +138,13 @@ func isMainAppRunning() -> Bool {
 func requestOverlayFromRunningApp() {
   DistributedNotificationCenter.default().post(
     name: showOverlayNotificationName,
+    object: "com.gotosleep.app"
+  )
+}
+
+func requestOverlayDismissalFromRunningApp() {
+  DistributedNotificationCenter.default().post(
+    name: dismissOverlayNotificationName,
     object: "com.gotosleep.app"
   )
 }
