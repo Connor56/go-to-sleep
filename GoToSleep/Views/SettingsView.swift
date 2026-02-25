@@ -1,67 +1,168 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @ObservedObject private var settings = AppSettings.shared
-    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
 
-    private let gracePeriodOptions = [
-        (15, "15 minutes"),
-        (30, "30 minutes"),
-        (60, "1 hour"),
-        (120, "2 hours"),
-    ]
+  @AppStorage(
+    "requestedSettingsChangeTimestamp", store: UserDefaults(suiteName: AppSettings.suiteName))
+  private var requestedSettingsChangeTimestamp: Int = 0
 
-    var body: some View {
-        Form {
-            Section {
-                Picker("Bedtime starts at", selection: $settings.bedtimeStartHour) {
-                    ForEach(0..<24, id: \.self) { hour in
-                        Text(formatHour(hour)).tag(hour)
-                    }
-                }
+  private let twentyMinutesInSeconds: Int = 1200
 
-                Picker("Bedtime ends at", selection: $settings.bedtimeEndHour) {
-                    ForEach(0..<24, id: \.self) { hour in
-                        Text(formatHour(hour)).tag(hour)
-                    }
-                }.padding(.bottom, 32)
-            } header: {
-                Text("Schedule")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                
+  func inAlterationWindow(currentTime: Int, start: Int, end: Int) -> Bool {
+    let afterStart = currentTime >= start
+    let beforeEnd = currentTime <= end
+
+    if afterStart && beforeEnd {
+      return true
+    }
+
+    return false
+  }
+
+  @State private var tickCount = 0
+
+  var body: some View {
+    let settingsAlterationWindowStart = requestedSettingsChangeTimestamp + twentyMinutesInSeconds
+    let settingsAlterationWindowEnd = requestedSettingsChangeTimestamp + 2 * twentyMinutesInSeconds
+    let currentTimestamp = Int(Date().timeIntervalSince1970)
+
+    let showUnlocked = inAlterationWindow(
+      currentTime: currentTimestamp, start: settingsAlterationWindowStart,
+      end: settingsAlterationWindowEnd)
+
+    Group {
+      if showUnlocked {
+        UnlockedSettingsView()
+      } else {
+        LockedSettingsView(startTime: settingsAlterationWindowStart, currentTime: currentTimestamp)
+      }
+    }
+    .frame(width: 400, height: 400)
+    .id(tickCount)
+    .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+      tickCount += 1
+    }
+  }
+}
+
+struct UnlockedSettingsView: View {
+  @AppStorage(
+    "requestedSettingsChangeTimestamp", store: UserDefaults(suiteName: AppSettings.suiteName))
+  private var requestedSettingsChangeTimestamp: Int = 0
+
+  @ObservedObject private var settings = AppSettings.shared
+  private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
+
+  private let gracePeriodOptions = [
+    (15, "15 minutes"),
+    (30, "30 minutes"),
+    (60, "1 hour"),
+    (120, "2 hours"),
+  ]
+
+  var body: some View {
+    VStack {
+      Text("Settings")
+        .padding(.bottom, 32)
+        .font(.title)
+
+      Form {
+        Section {
+          Picker("Bedtime starts at", selection: $settings.bedtimeStartHour) {
+            ForEach(0..<24, id: \.self) { hour in
+              Text(formatHour(hour)).tag(hour)
             }
+          }
 
-            Section {
-                Stepper("Questions per session: \(settings.questionsPerSession)",
-                        value: $settings.questionsPerSession, in: 1...10).padding(.bottom, 32)
-            } header: {
-                Text("Questions")
-                    .font(.title3)
-                    .fontWeight(.semibold)
+          Picker("Bedtime ends at", selection: $settings.bedtimeEndHour) {
+            ForEach(0..<24, id: \.self) { hour in
+              Text(formatHour(hour)).tag(hour)
             }
+          }.padding(.bottom, 32)
+        } header: {
+          Text("Schedule")
+            .font(.title3)
+            .fontWeight(.semibold)
 
-            Section {
-                Picker("Grace period", selection: $settings.gracePeriodMinutes) {
-                    ForEach(gracePeriodOptions, id: \.0) { value, label in
-                        Text(label).tag(value)
-                    }
-                }
-            } header: {
-                Text("After Completion")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-            }
         }
-        .padding(.horizontal, 32)
-    }
 
-    private func formatHour(_ hour: Int) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h a"
-        var components = DateComponents()
-        components.hour = hour
-        let date = Calendar.current.date(from: components) ?? Date()
-        return formatter.string(from: date)
+        Section {
+          Stepper(
+            "Questions per session: \(settings.questionsPerSession)",
+            value: $settings.questionsPerSession, in: 1...10
+          ).padding(.bottom, 32)
+        } header: {
+          Text("Questions")
+            .font(.title3)
+            .fontWeight(.semibold)
+        }
+
+        Section {
+          Picker("Grace period", selection: $settings.gracePeriodMinutes) {
+            ForEach(gracePeriodOptions, id: \.0) { value, label in
+              Text(label).tag(value)
+            }
+          }.padding(.bottom, 32)
+        } header: {
+          Text("After Completion")
+            .font(.title3)
+            .fontWeight(.semibold)
+        }
+      }
+      .padding(.horizontal, 32)
+
+      Button("Lock Settings") {
+        requestedSettingsChangeTimestamp = 0
+      }
     }
+  }
+
+  private func formatHour(_ hour: Int) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "h a"
+    var components = DateComponents()
+    components.hour = hour
+    let date = Calendar.current.date(from: components) ?? Date()
+    return formatter.string(from: date)
+  }
+}
+
+struct LockedSettingsView: View {
+  @AppStorage(
+    "requestedSettingsChangeTimestamp", store: UserDefaults(suiteName: AppSettings.suiteName))
+  private var requestedSettingsChangeTimestamp: Int = 0
+
+  let startTime: Int
+
+  let currentTime: Int
+
+  var body: some View {
+    VStack {
+      Image(systemName: "lock.fill")
+        .font(.system(size: 32))
+        .foregroundColor(.secondary)
+
+      Text("Settings are locked")
+        .font(.title)
+        .padding(.bottom, 16)
+
+      if startTime > currentTime {
+        Text("Opens in \(startTime - currentTime) seconds")
+          .padding(.bottom, 16)
+
+        Button("Cancel Request") {
+          requestedSettingsChangeTimestamp = 0
+        }
+      } else {
+        Text("On request, settings will open after 20 minutes, and stay open for 20 minutes.")
+          .padding(.horizontal, 32)
+          .padding(.bottom, 16)
+          .multilineTextAlignment(.center)
+
+        Button("Request Change") {
+          requestedSettingsChangeTimestamp = currentTime
+        }
+      }
+    }
+  }
 }
