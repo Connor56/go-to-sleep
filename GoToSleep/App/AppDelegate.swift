@@ -4,6 +4,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
   private let showOverlayNotificationName = Notification.Name("com.gotosleep.showOverlayNow")
+  private let dismissOverlayNotificationName = Notification.Name("come.gotosleep.dismissOverlayNow")
   private let overlayController = OverlayWindowController()
   private let focusEnforcer = FocusEnforcer()
   private let audioMuter = AudioMuter()
@@ -132,7 +133,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   }
 
   func dismissOverlay() {
+    guard isShowingOverlay else { return }
+
     print("\(debugMarker) dismissOverlay called")
+
     overlayController.dismiss()
     audioMuter.unmute()
     focusEnforcer.stop()
@@ -182,12 +186,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     )
     print("\(debugMarker) Registered distributed overlay observer")
+
+    DistributedNotificationCenter.default().addObserver(
+      self,
+      selector: #selector(handleDismissOverlayNotification),
+      name: dismissOverlayNotificationName,
+      object: "com.gotosleep.app",
+      suspensionBehavior: .deliverImmediately
+
+    )
   }
 
   @objc func handleOverlayNotification() {
     // Needed to make sure the message is relayed correctly
     print("\(self.debugMarker ?? "[GTS_DEBUG_REMOVE_ME]") Received distributed overlay request")
     self.showOverlay()
+  }
+
+  @objc func handleDismissOverlayNotification() {
+    print(
+      "\(self.debugMarker ?? "[GTS_DEBUG_REMOVE_ME]") Received distributed dismiss overlay request")
+    self.dismissOverlay()
   }
 
   // MARK: - Daemon Registration
