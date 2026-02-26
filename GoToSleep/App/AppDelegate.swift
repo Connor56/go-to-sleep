@@ -113,12 +113,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     Paths.ensureDirectoryExists()
     Paths.removeFile(at: Paths.sessionCompletedPath)
 
-    let count = AppSettings.shared.questionsPerSession
-    let questions = questionStore.selectQuestions(count: count)
-    print("\(debugMarker) selectedQuestionsCount=\(questions.count), requestedCount=\(count)")
-
-    guard !questions.isEmpty else {
-      print("\(debugMarker) No questions available, aborting overlay")
+    guard questionStore.eligibleCount() > 0 else {
+      print("\(debugMarker) No eligible questions available, aborting overlay")
       isShowingOverlay = false
       return
     }
@@ -127,7 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     focusEnforcer.start()
     NSApp.activate(ignoringOtherApps: true)
 
-    overlayController.show(questions: questions) { [weak self] in
+    overlayController.show(questionStore: questionStore) { [weak self] in
       self?.completeSession()
     }
   }
