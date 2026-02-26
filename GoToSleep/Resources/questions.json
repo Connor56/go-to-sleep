@@ -1,77 +1,292 @@
 [
   {
-    "id": "energy-level",
-    "text": "How would you describe your energy level right now?",
-    "type": "multiple_choice",
+    "id": "caffeine-half-life",
+    "type": "hard_multiple_choice",
+    "chapter": 2,
+    "text": "Caffeine has a specific 'half-life' \u2014 the time it takes for your body to eliminate 50% of the caffeine you consumed. Based on sleep research, what is caffeine's average half-life in the human body?",
     "choices": [
-      "Wired — I could keep going for hours",
-      "Tired but fighting it",
-      "Genuinely exhausted",
-      "Somewhere in between"
+      { "text": "30 minutes to 1 hour", "hint": "This is how long it takes for caffeine to reach peak concentration, not its half-life." },
+      { "text": "1 to 2 hours", "hint": "Much too fast. If this were true, an afternoon coffee would clear by dinner." },
+      { "text": "2 to 3 hours", "hint": "Still too short. Many people report poor sleep from coffee 8+ hours earlier." },
+      { "text": "3 to 4 hours", "hint": "Getting warmer, but caffeine persists longer than most people think." },
+      { "text": "5 to 7 hours", "hint": null },
+      { "text": "8 to 10 hours", "hint": "This is closer to the time it takes to mostly clear caffeine, but it's not the half-life." },
+      { "text": "10 to 12 hours", "hint": "By this point most caffeine is gone, but the half-life is shorter." },
+      { "text": "12 to 15 hours", "hint": "This would mean a morning coffee is half-present at midnight. Too long for the half-life." },
+      { "text": "15 to 20 hours", "hint": "Nearly a full day \u2014 far too long for a single half-life." },
+      { "text": "It varies so much it can't be measured", "hint": "While genetics do affect clearance speed, the average half-life is well-established." }
+    ],
+    "answerIndex": 4,
+    "correctExplanation": "Caffeine's half-life is 5\u20137 hours. That means if you drink a cup of coffee at 7:30 PM, by 1:30 AM you still have HALF that caffeine circulating in your brain. A coffee after dinner is the biochemical equivalent of getting into bed and having someone drip half a cup of coffee into your IV line.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 2"
+  },
+  {
+    "id": "circadian-rhythm-length",
+    "type": "hard_multiple_choice",
+    "chapter": 2,
+    "text": "The human body has an internal clock that runs on a cycle slightly different from 24 hours. Research has found the average human circadian rhythm runs on a cycle of approximately how long?",
+    "choices": [
+      { "text": "Exactly 24 hours", "hint": "Close, but if it were exactly 24 hours, we wouldn't need environmental cues to reset it daily." },
+      { "text": "23 hours 30 minutes", "hint": "Too short. This would mean your body clock runs ahead of the day, not behind." },
+      { "text": "23 hours 45 minutes", "hint": "Still too short. Your body clock actually runs slightly longer than 24 hours." },
+      { "text": "24 hours 15 minutes", "hint": null },
+      { "text": "24 hours 45 minutes", "hint": "Close in direction, but that's too far off \u2014 you'd drift almost an hour per day." },
+      { "text": "25 hours", "hint": "Early research suggested this, but it was based on flawed experiments. Modern research shows it's closer to 24 hours." },
+      { "text": "25 hours 30 minutes", "hint": "Way too long. Your body would be massively out of sync within days." },
+      { "text": "It changes with age", "hint": "While sleep patterns change with age, the circadian period length is remarkably consistent." },
+      { "text": "It varies by more than 2 hours between people", "hint": "Individual variation exists, but the average is well-established." },
+      { "text": "It cannot be measured without sunlight", "hint": "In fact, the most accurate measurements were made deep underground, completely without sunlight." }
     ],
     "answerIndex": 3,
-    "reference": "https://some-paper"
+    "correctExplanation": "Your internal clock runs on a cycle of about 24 hours and 15 minutes, not exactly 24 hours. This means without environmental cues like sunlight, your sleep schedule would drift later by about 15 minutes each day. This is why consistent morning light exposure is so important \u2014 it resets your slightly-too-long clock back to 24 hours every day.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 2"
   },
   {
-    "id": "screen-time-feeling",
-    "text": "How does your screen time tonight make you feel?",
-    "type": "multiple_choice",
+    "id": "sleep-deprivation-memory",
+    "type": "hard_multiple_choice",
+    "chapter": 7,
+    "text": "Dr. Matthew Walker's research at UC Berkeley found that pulling an all-nighter before learning new information results in what level of deficit in the ability to make new memories, compared to a full night of sleep?",
     "choices": [
-      "Productive — I got stuff done",
-      "Mindless — just scrolling",
-      "Social — talking to people",
-      "Creative — making something"
+      { "text": "5% deficit", "hint": "Far too mild. Sleep deprivation has a dramatic impact on memory formation." },
+      { "text": "10% deficit", "hint": "Still too low. The brain's memory circuits are severely compromised without sleep." },
+      { "text": "15% deficit", "hint": "Getting closer, but the real impact is far worse than most people expect." },
+      { "text": "20% deficit", "hint": "This is the benefit a nap gives you. An all-nighter costs far more." },
+      { "text": "30% deficit", "hint": "Not quite. The hippocampus is even more disrupted than this suggests." },
+      { "text": "40% deficit", "hint": null },
+      { "text": "50% deficit", "hint": "Close, but slightly overestimated. Though the real number is shocking enough." },
+      { "text": "60% deficit", "hint": "Too high, though the actual number is still devastating." },
+      { "text": "75% deficit", "hint": "This would mean almost no learning at all. The real deficit is serious but not quite this extreme." },
+      { "text": "It depends entirely on the type of information", "hint": "While the type matters somewhat, the deficit is consistent across many types of learning." }
     ],
-    "answerIndex": 2,
-    "reference": "https://some-paper"
+    "answerIndex": 5,
+    "correctExplanation": "A single all-nighter produces a 40% deficit in your ability to make new memories. Your hippocampus \u2014 the brain's memory inbox \u2014 effectively shuts its doors when you're sleep-deprived. That's the difference between acing an exam and failing it, between remembering someone's name and forgetting it instantly.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 7"
   },
   {
-    "id": "worth-it",
-    "text": "Will staying up another hour be worth it tomorrow morning?",
-    "type": "multiple_choice",
+    "id": "emotional-reactivity",
+    "type": "hard_multiple_choice",
+    "chapter": 7,
+    "text": "Brain imaging studies showed that sleep-deprived individuals had a dramatically amplified response in their amygdala (the brain's emotional center) when shown disturbing images. How much greater was the emotional reaction compared to well-rested participants?",
     "choices": [
-      "Definitely not",
-      "Probably not",
-      "Maybe",
-      "Yes, I have a good reason"
+      { "text": "10% greater", "hint": "Far too low. Sleep deprivation profoundly destabilizes emotional regulation." },
+      { "text": "20% greater", "hint": "Still too conservative. The amygdala's response is dramatically heightened." },
+      { "text": "30% greater", "hint": "Getting warmer, but the real amplification is even more extreme." },
+      { "text": "40% greater", "hint": "Close, but the brain's emotional center is even more unhinged than this." },
+      { "text": "60% greater", "hint": null },
+      { "text": "80% greater", "hint": "Too high, though the actual amplification is deeply concerning." },
+      { "text": "100% greater (doubled)", "hint": "Not quite doubled, but the actual number is still alarming." },
+      { "text": "200% greater (tripled)", "hint": "This would mean a tripled response. The real effect is large but not this extreme." },
+      { "text": "It varies too much to quantify", "hint": "Brain scanning has allowed precise measurement of this effect." },
+      { "text": "The amygdala actually shows less activity", "hint": "The opposite is true \u2014 sleep deprivation supercharges the amygdala." }
     ],
-    "answerIndex": 0,
-    "reference": "https://some-paper"
+    "answerIndex": 4,
+    "correctExplanation": "Sleep-deprived brains showed a 60% amplification in amygdala reactivity. Without sleep, the prefrontal cortex \u2014 your rational brake pedal \u2014 loses its connection to the emotional gas pedal. You're not just a little more emotional when tired; you're operating with a 60% more reactive emotional brain and without the rational control to manage it.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 7"
   },
   {
-    "id": "memory-retention",
-    "text": "As a percentage, how much better do people who sleep 8 hours do on memory tests than those who sleep for 6 hours?",
-    "type": "exact_answer_percentage",
-    "reference": "https://some-paper"
+    "id": "animal-sleep-hours",
+    "type": "hard_multiple_choice",
+    "chapter": 4,
+    "text": "Sleep has evolved independently in every animal species ever studied. Among mammals, which animal sleeps approximately 19 hours per day \u2014 the most of any mammal?",
+    "choices": [
+      { "text": "Elephant", "hint": "Elephants sleep only about 4 hours per day \u2014 among the least of any mammal." },
+      { "text": "Sloth", "hint": "Despite their reputation, sloths sleep about 10 hours per day in the wild." },
+      { "text": "House cat", "hint": "Cats sleep about 12\u201316 hours, but there's a mammal that sleeps even more." },
+      { "text": "Koala", "hint": "Koalas sleep about 14\u201316 hours \u2014 a lot, but not the record holder." },
+      { "text": "Lion", "hint": "Lions sleep about 15 hours per day. Close, but not the champion sleeper." },
+      { "text": "Brown bat", "hint": null },
+      { "text": "Opossum", "hint": "Opossums sleep about 18 hours \u2014 close to the top but not quite." },
+      { "text": "Armadillo", "hint": "Armadillos are heavy sleepers at about 16\u201318 hours, but one mammal beats them." },
+      { "text": "Hamster", "hint": "Hamsters sleep about 14 hours per day \u2014 less than several other mammals." },
+      { "text": "All mammals sleep roughly the same amount", "hint": "Sleep duration varies enormously across mammals, from 4 to 19 hours per day." }
+    ],
+    "answerIndex": 5,
+    "correctExplanation": "The brown bat sleeps approximately 19 hours per day, making it the longest-sleeping mammal. At the other extreme, elephants sleep only about 4 hours. Sleep duration in mammals appears to be influenced by body size, metabolic rate, predation risk, and diet complexity \u2014 but the fact that every animal sleeps, despite the enormous vulnerability it creates, tells us sleep provides something so vital that evolution has never been able to eliminate it.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 4"
   },
   {
-    "id": "range-of-possibilities",
-    "text": "Roughly how many hours does the average American sleep a night?",
-    "type": "range_answer_float",
-    "min": 6.5,
-    "max": 7.5,
-    "exact": 7.2
+    "id": "adults-failing-sleep",
+    "type": "hard_multiple_choice",
+    "chapter": 1,
+    "text": "According to research cited by the World Health Organization, what fraction of adults in developed nations fail to obtain the recommended 8 hours of sleep per night?",
+    "choices": [
+      { "text": "1 in 10", "hint": "Far too optimistic. Sleep insufficiency is far more widespread than this." },
+      { "text": "1 in 5", "hint": "Still too low. The sleep crisis affects a much larger portion of the population." },
+      { "text": "1 in 4", "hint": "Higher than you'd hope, but the real number is even worse." },
+      { "text": "1 in 3", "hint": "Getting closer. The reality is grimmer still." },
+      { "text": "1 in 2", "hint": "Very close, but the actual figure is even higher than half." },
+      { "text": "2 out of 3", "hint": null },
+      { "text": "3 out of 4", "hint": "This would mean 75% are failing \u2014 the real number is high but not quite this extreme." },
+      { "text": "4 out of 5", "hint": "80% would represent almost universal sleep deprivation. The real figure is lower." },
+      { "text": "9 out of 10", "hint": "Nearly everyone \u2014 too extreme. Many people do manage adequate sleep." },
+      { "text": "The data is insufficient to estimate", "hint": "Extensive surveys across many countries have established this figure quite clearly." }
+    ],
+    "answerIndex": 5,
+    "correctExplanation": "Two-thirds of adults in developed nations fail to obtain 8 hours of sleep. The WHO has declared a sleep loss epidemic throughout industrialized nations. You are almost certainly one of these people, and you're reading this right now instead of sleeping \u2014 which is exactly the problem.",
+    "minimumSeconds": 30,
+    "reference": "Walker, Why We Sleep, Ch. 1"
+  },
+
+  {
+    "id": "nk-cell-drop",
+    "type": "verifiable_fact",
+    "chapter": 8,
+    "text": "Dr. Michael Irwin found that a single night of only 4 hours of sleep swept away what percentage of natural killer cells (your cancer-fighting immune cells) compared to a full 8-hour night?",
+    "answerType": "percentage",
+    "exactAnswer": 70,
+    "tolerance": 5,
+    "unit": "%",
+    "maxAttempts": 1,
+    "minimumSeconds": 30,
+    "correctExplanation": "A single bad night of just 4 hours stripped away 70% of your natural killer cells. These are the cells that hunt down and destroy cancerous mutations in your body every single day. Now imagine the state of your immune army after a week, a month, or years of short sleep.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
   },
   {
-    "id": "test-calculation-question",
-    "text": "The average number of required hours of sleep each month follows a normal distribution with Sigma: {sigma}, Lambda: {lambda}. What is the probability your require less than {hours} of sleep a night?",
+    "id": "brain-cleaning-system",
+    "type": "verifiable_fact",
+    "chapter": 6,
+    "text": "Dr. Maiken Nedergaard discovered a sewage-like cleaning system in the brain that kicks into high gear during deep NREM sleep, flushing out toxic metabolic waste including Alzheimer's-related amyloid protein. What is this system called?",
+    "answerType": "word",
+    "exactAnswer": "glymphatic",
+    "maxAttempts": 5,
+    "minimumSeconds": 30,
+    "correctExplanation": "The glymphatic system is your brain's night-shift cleaning crew. During deep NREM sleep, glial cells shrink by up to 60%, creating channels for cerebrospinal fluid to power-wash toxic waste from your brain \u2014 including the amyloid plaques linked to Alzheimer's. It's a 10\u201320x increase in cleaning power compared to when you're awake. Skipping sleep is like telling the cleaning crew to go home \u2014 the toxic garbage just piles up.",
+    "reference": "Walker, Why We Sleep, Ch. 6"
+  },
+  {
+    "id": "cold-infection-rate",
+    "type": "verifiable_fact",
+    "chapter": 8,
+    "text": "Researchers quarantined participants and exposed them to the rhinovirus (common cold). Those sleeping 5 hours or less had an infection rate of roughly 50%. What was the approximate infection rate for those sleeping 7 or more hours?",
+    "answerType": "percentage",
+    "exactAnswer": 18,
+    "tolerance": 5,
+    "unit": "%",
+    "maxAttempts": 1,
+    "minimumSeconds": 30,
+    "correctExplanation": "Those sleeping 7+ hours had roughly an 18% infection rate versus about 50% for those sleeping 5 hours or less. Nearly three times the protection, just from sleeping adequately. Your immune system doesn't just benefit from sleep \u2014 it fundamentally depends on it.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
+  },
+  {
+    "id": "sleep-cycle-duration",
+    "type": "verifiable_fact",
+    "chapter": 3,
+    "text": "Sleep alternates between NREM and REM stages in repeating cycles throughout the night. Each NREM-REM cycle lasts approximately how many minutes?",
+    "answerType": "number",
+    "exactAnswer": 90,
+    "tolerance": 5,
+    "unit": "minutes",
+    "maxAttempts": 1,
+    "minimumSeconds": 30,
+    "correctExplanation": "Each sleep cycle lasts about 90 minutes. But here's what matters: the ratio of NREM to REM within each cycle changes across the night. Early cycles are dominated by deep NREM sleep; later cycles are dominated by REM sleep. This means if you cut your sleep short by even 90 minutes, you lose a disproportionate amount of REM sleep \u2014 the stage critical for emotional regulation and creativity.",
+    "reference": "Walker, Why We Sleep, Ch. 3"
+  },
+  {
+    "id": "flu-vaccine-response",
+    "type": "verifiable_fact",
+    "chapter": 8,
+    "text": "In a flu vaccine study, participants who were restricted to 4 hours of sleep per night in the week before vaccination produced less than what percentage of the normal antibody response compared to well-rested participants?",
+    "answerType": "percentage",
+    "exactAnswer": 50,
+    "tolerance": 5,
+    "unit": "%",
+    "maxAttempts": 1,
+    "minimumSeconds": 30,
+    "correctExplanation": "Sleep-restricted participants produced less than 50% of the normal antibody response to the flu vaccine. In other words, their bodies barely recognized the vaccine. Sleep is so fundamental to immune function that without it, even medical interventions designed to protect you are rendered largely ineffective.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
+  },
+
+  {
+    "id": "caffeine-remaining",
+    "type": "calculation",
+    "chapter": 2,
+    "tags": ["half-life-decay"],
+    "text": "You drink a cup of coffee containing {caffeine_mg}mg of caffeine at {drink_time}. Caffeine's half-life is {half_life} hours. How many milligrams of caffeine are still circulating in your brain at {check_time}?",
     "parameters": {
-      "sigma": {
-        "min": 5,
-        "max": 7,
-        "type": "float"
-      },
-      "lambda": {
-        "min": 3,
-        "max": 4.5,
-        "type": "float"
-      },
-      "hours": {
-        "min": 6,
-        "max": 10,
-        "type": "int"
-      }
+      "caffeine_mg": { "type": "int", "min": 80, "max": 200, "step": 10, "unit": "mg" },
+      "drink_time": { "type": "enum", "values": ["2:00 PM", "4:00 PM", "6:00 PM", "7:30 PM"] },
+      "half_life": { "type": "float", "min": 5.0, "max": 7.0, "step": 0.5, "unit": "hours" },
+      "check_time": { "type": "enum", "values": ["11:00 PM", "12:00 AM", "1:00 AM", "2:00 AM"] }
     },
-    "calculate": "ProbabilityLessThanWithNormal(sigma, lambda, hours)"
+    "calculate": "ROUND(HALF_LIFE_DECAY(caffeine_mg, half_life, HOURS_BETWEEN(drink_time, check_time)), 0)",
+    "tolerance": 5,
+    "unit": "mg",
+    "maxAttempts": 5,
+    "minimumSeconds": 30,
+    "correctExplanation": "Even hours after your last sip, caffeine is still fighting sleep in your brain. At {check_time}, you'd still have {answer}mg of caffeine active \u2014 that's like drinking {ROUND(DIVIDE(answer, 95), 1)} of a fresh cup right as you're trying to sleep. Your adenosine receptors are being blocked, your brain can't hear the 'time to sleep' signal, and you're paying for it with lighter, more fragmented sleep.",
+    "reference": "Walker, Why We Sleep, Ch. 2"
+  },
+  {
+    "id": "immune-cell-loss",
+    "type": "calculation",
+    "chapter": 8,
+    "tags": ["percentages"],
+    "text": "A healthy person normally has approximately {nk_cells} natural killer cells per unit of blood. After a single night of only 4 hours of sleep, they lose 70% of those cells. How many natural killer cells remain?",
+    "parameters": {
+      "nk_cells": { "type": "int", "min": 100, "max": 500, "step": 50, "unit": "cells" }
+    },
+    "calculate": "ROUND(MULTIPLY(nk_cells, 0.30), 0)",
+    "tolerance": 5,
+    "unit": "cells",
+    "maxAttempts": 5,
+    "minimumSeconds": 30,
+    "correctExplanation": "From {nk_cells} cells, only {answer} remain after just one night of 4-hour sleep \u2014 that's a 70% wipeout of your frontline cancer defense. These natural killer cells are responsible for identifying and eliminating cancerous mutations that occur in your body every day. One bad night is all it takes to leave your body virtually undefended.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
+  },
+  {
+    "id": "memory-retention-benefit",
+    "type": "calculation",
+    "chapter": 6,
+    "tags": ["percentages"],
+    "text": "A student memorizes {word_count} vocabulary words before bed. Research shows sleep provides a 20-40% memory retention benefit compared to the same time spent awake. Assuming a {retention_pct}% retention benefit from sleep, how many additional words would the sleeping student retain compared to the student who stayed awake?",
+    "parameters": {
+      "word_count": { "type": "int", "min": 40, "max": 100, "step": 10, "unit": "words" },
+      "retention_pct": { "type": "int", "min": 20, "max": 40, "step": 5, "unit": "%" }
+    },
+    "calculate": "ROUND(MULTIPLY(word_count, DIVIDE(retention_pct, 100)), 0)",
+    "tolerance": 3,
+    "unit": "words",
+    "maxAttempts": 5,
+    "minimumSeconds": 30,
+    "correctExplanation": "The sleeping student retains {answer} more words \u2014 a {retention_pct}% advantage, just from sleeping. Sleep doesn't just prevent forgetting; it actively strengthens memories. During deep NREM sleep, your brain replays and consolidates the day's learning, moving memories from temporary storage in the hippocampus to permanent storage in the cortex.",
+    "reference": "Walker, Why We Sleep, Ch. 6"
+  },
+  {
+    "id": "cancer-risk-increase",
+    "type": "calculation",
+    "chapter": 8,
+    "tags": ["percentages"],
+    "text": "A European study of 25,000 people found that sleeping 6 hours or less increases cancer risk by 40% compared to sleeping 7+ hours. If a population of {population} people all slept 7+ hours, approximately {base_rate} would develop cancer. How many additional cancer cases would you expect if they all slept 6 hours or less instead?",
+    "parameters": {
+      "population": { "type": "int", "min": 1000, "max": 5000, "step": 1000, "unit": "people" },
+      "base_rate": { "type": "int", "min": 50, "max": 200, "step": 25, "unit": "cases" }
+    },
+    "calculate": "ROUND(MULTIPLY(base_rate, 0.40), 0)",
+    "tolerance": 5,
+    "unit": "cases",
+    "maxAttempts": 5,
+    "minimumSeconds": 30,
+    "correctExplanation": "That's {answer} additional cancer cases \u2014 a 40% increase \u2014 driven entirely by insufficient sleep. The World Health Organization has classified nighttime shift work as a 'probable carcinogen.' You don't need to work night shifts to damage yourself; routinely sleeping 6 hours or less produces the same biological assault on your body.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
+  },
+
+  {
+    "id": "gene-distortion",
+    "type": "verifiable_fact",
+    "chapter": 8,
+    "text": "After just one week of sleeping 6 hours per night, researchers found that the activity of a staggering number of genes was distorted \u2014 roughly half were up-regulated (inflammation, stress) and half were down-regulated (immune function, metabolism). Approximately how many genes were affected?",
+    "answerType": "number",
+    "exactAnswer": 711,
+    "tolerance": 50,
+    "unit": "genes",
+    "maxAttempts": 1,
+    "minimumSeconds": 30,
+    "correctExplanation": "711 genes had their activity distorted after just one week of 6-hour sleep. Half of those genes were cranked up \u2014 promoting inflammation, stress responses, and cardiovascular disease. The other half were dialed down \u2014 suppressing immune function and metabolic regulation. Your DNA literally changes its behavior when you don't sleep enough.",
+    "reference": "Walker, Why We Sleep, Ch. 8"
   }
 ]
