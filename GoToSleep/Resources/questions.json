@@ -1,44 +1,77 @@
 [
-    {
-        "id": "reflect-today",
-        "text": "What's one thing that went well today?",
-        "type": "free_text",
-        "choices": null
+  {
+    "id": "energy-level",
+    "text": "How would you describe your energy level right now?",
+    "type": "multiple_choice",
+    "choices": [
+      "Wired — I could keep going for hours",
+      "Tired but fighting it",
+      "Genuinely exhausted",
+      "Somewhere in between"
+    ],
+    "answerIndex": 3,
+    "reference": "https://some-paper"
+  },
+  {
+    "id": "screen-time-feeling",
+    "text": "How does your screen time tonight make you feel?",
+    "type": "multiple_choice",
+    "choices": [
+      "Productive — I got stuff done",
+      "Mindless — just scrolling",
+      "Social — talking to people",
+      "Creative — making something"
+    ],
+    "answerIndex": 2,
+    "reference": "https://some-paper"
+  },
+  {
+    "id": "worth-it",
+    "text": "Will staying up another hour be worth it tomorrow morning?",
+    "type": "multiple_choice",
+    "choices": [
+      "Definitely not",
+      "Probably not",
+      "Maybe",
+      "Yes, I have a good reason"
+    ],
+    "answerIndex": 0,
+    "reference": "https://some-paper"
+  },
+  {
+    "id": "memory-retention",
+    "text": "As a percentage, how much better do people who sleep 8 hours do on memory tests than those who sleep for 6 hours?",
+    "type": "exact_answer_percentage",
+    "reference": "https://some-paper"
+  },
+  {
+    "id": "range-of-possibilities",
+    "text": "Roughly how many hours does the average American sleep a night?",
+    "type": "range_answer_float",
+    "min": 6.5,
+    "max": 7.5,
+    "exact": 7.2
+  },
+  {
+    "id": "test-calculation-question",
+    "text": "The average number of required hours of sleep each month follows a normal distribution with Sigma: {sigma}, Lambda: {lambda}. What is the probability your require less than {hours} of sleep a night?",
+    "parameters": {
+      "sigma": {
+        "min": 5,
+        "max": 7,
+        "type": "float"
+      },
+      "lambda": {
+        "min": 3,
+        "max": 4.5,
+        "type": "float"
+      },
+      "hours": {
+        "min": 6,
+        "max": 10,
+        "type": "int"
+      }
     },
-    {
-        "id": "energy-level",
-        "text": "How would you describe your energy level right now?",
-        "type": "multiple_choice",
-        "choices": ["Wired — I could keep going for hours", "Tired but fighting it", "Genuinely exhausted", "Somewhere in between"]
-    },
-    {
-        "id": "staying-up-reason",
-        "text": "What's keeping you up right now? Be honest.",
-        "type": "free_text",
-        "choices": null
-    },
-    {
-        "id": "tomorrow-priority",
-        "text": "What's the most important thing you need to do tomorrow?",
-        "type": "free_text",
-        "choices": null
-    },
-    {
-        "id": "screen-time-feeling",
-        "text": "How does your screen time tonight make you feel?",
-        "type": "multiple_choice",
-        "choices": ["Productive — I got stuff done", "Mindless — just scrolling", "Social — talking to people", "Creative — making something"]
-    },
-    {
-        "id": "sleep-blocker",
-        "text": "What would you need to let go of to sleep peacefully right now?",
-        "type": "free_text",
-        "choices": null
-    },
-    {
-        "id": "worth-it",
-        "text": "Will staying up another hour be worth it tomorrow morning?",
-        "type": "multiple_choice",
-        "choices": ["Definitely not", "Probably not", "Maybe", "Yes, I have a good reason"]
-    }
+    "calculate": "ProbabilityLessThanWithNormal(sigma, lambda, hours)"
+  }
 ]
