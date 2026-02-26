@@ -41,6 +41,39 @@ This compiles both targets and puts the results in `./build/Debug/`.
 
 ### 3. Run
 
+When you're unsure of whether the app will actually provide you a proper overlay that you could reasonably dismiss you should switch off the daemon, and comment out the part of the app that installs the Daemon every time you run it:
+
+```swift
+func applicationDidFinishLaunching(_ notification: Notification) {
+    print("\(debugMarker) applicationDidFinishLaunching args=\(CommandLine.arguments)")
+
+    setupStatusItem()
+    audioMuter.restoreIfNeeded()
+    registerOverlayNotificationObserver()
+
+    // Comment out this line and build the app again, otherwise the deamon might
+    // force relaunch the overlay, or it might shut down the overlay when you're testing
+    // it.
+    // TODO: Uncomment the line below when you're happy the app works correctly.
+    // registerDaemon()
+
+    if CommandLine.arguments.contains("--bedtime") {
+        print("\(debugMarker) Detected --bedtime launch, showing overlay")
+        showOverlay()
+    }
+}
+```
+
+You should also make sure that the daemon is switched off in Settings > General > Login Items. Otherwise, an old Daemon could still be running on your system, and it could still cause havoc!
+
+Then you should run the app manually from the terminal with:
+
+```bash
+( ./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime & pid=$!; sleep 30; kill $pid 2>/dev/null ) & wait
+```
+
+This will run the app in the background and kill it after 30 seconds regardless of whether the app is actually providing you a proper overlay that you could reasonably dismiss. You should see the overlay appear and then disappear.
+
 ```bash
 # Run the app normally (menu bar icon)
 ./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep
@@ -115,24 +148,32 @@ Resources/
 If you're new to Swift, here's a quick guide to the patterns used in this project:
 
 ### `@main`
+
 Marks the entry point of the app. In `GoToSleepApp.swift`, the `@main` attribute tells Swift "this is where execution starts." The struct conforms to the `App` protocol, which requires a `body` property that returns one or more `Scene`s.
 
 ### Scenes
+
 A Scene is a top-level piece of UI that the system manages. We use two:
+
 - `MenuBarExtra` — puts an icon in the menu bar with a dropdown
 - `Settings` — the preferences window (opened with Cmd+,)
 
 ### `@AppStorage`
+
 A property wrapper that reads/writes to `UserDefaults` (macOS's key-value preferences store). When you write `@AppStorage("key") var value = default`, it automatically loads the saved value on launch and saves changes. We use a shared suite (`com.gotosleep.shared`) so the daemon can read the same settings.
 
 ### `Codable`
+
 A protocol that lets you convert Swift types to/from JSON (or other formats). Our `Question` struct is `Codable`, which means `JSONDecoder` can turn JSON data into `Question` instances automatically — no manual parsing needed.
 
 ### `ObservableObject` and `@ObservedObject`
+
 SwiftUI's way of sharing mutable state between views. `AppSettings` is an `ObservableObject` — when any of its `@AppStorage` properties change, all views observing it re-render automatically.
 
 ### AppKit vs SwiftUI
+
 SwiftUI is Apple's declarative UI framework (describe what you want, the system figures out how to draw it). AppKit is the older imperative framework (you tell the system exactly what to do, step by step). We use both:
+
 - **SwiftUI** for all the UI (views, settings, menu bar)
 - **AppKit** for things SwiftUI can't do: controlling window level, setting presentation options, detecting app activation
 
@@ -158,6 +199,7 @@ We need a LaunchAgent because the daemon needs to launch the main app, which sho
 `SMAppService.agent(plistName:)` is Apple's modern API (macOS 13+) for registering a LaunchAgent that's bundled inside your `.app`. It replaces the old approach of manually copying plist files to `~/Library/LaunchAgents/`.
 
 When we call `try service.register()`, macOS:
+
 1. Reads the plist from inside the app bundle
 2. Registers it with `launchd`
 3. Shows it in **System Settings → General → Login Items** where the user can enable/disable it
@@ -213,13 +255,13 @@ We use kiosk mode because the whole point of this app is to be hard to dismiss. 
 
 Open settings via the menu bar icon → Settings, or **Cmd+,**:
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| Enabled | On | Quick toggle without quitting |
-| Bedtime start | 9 PM | When the overlay can trigger |
-| Bedtime end | 7 AM | When the overlay stops triggering |
-| Questions per session | 3 | How many questions to ask (1–10) |
-| Grace period | 1 hour | How long after completion before re-triggering |
+| Setting               | Default | Description                                    |
+| --------------------- | ------- | ---------------------------------------------- |
+| Enabled               | On      | Quick toggle without quitting                  |
+| Bedtime start         | 9 PM    | When the overlay can trigger                   |
+| Bedtime end           | 7 AM    | When the overlay stops triggering              |
+| Questions per session | 3       | How many questions to ask (1–10)               |
+| Grace period          | 1 hour  | How long after completion before re-triggering |
 
 ## Common Tasks
 
@@ -229,10 +271,10 @@ Edit `GoToSleep/Resources/questions.json`. Each question needs:
 
 ```json
 {
-    "id": "unique-id",
-    "text": "Your question text?",
-    "type": "free_text",
-    "choices": null
+  "id": "unique-id",
+  "text": "Your question text?",
+  "type": "free_text",
+  "choices": null
 }
 ```
 
@@ -245,6 +287,7 @@ Edit `AppSettings.swift`, change the default value for `questionsPerSession`.
 ### Testing the Overlay
 
 From the terminal:
+
 ```bash
 ./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime
 ```
@@ -264,32 +307,37 @@ This gives you 30 seconds before the process is terminated. Adjust the number as
 
 ## Data Storage
 
-| Data | Location | Format |
-|------|----------|--------|
-| Settings | UserDefaults (shared suite `com.gotosleep.shared`) | Managed by macOS |
-| Answer log | `~/Library/Application Support/GoToSleep/answers.jsonl` | JSON Lines (one entry per line) |
-| Questions | Bundled in app | `questions.json` |
-| Session markers | `~/Library/Application Support/GoToSleep/session-*` | Timestamp files |
-| Kill log | `~/Library/Application Support/GoToSleep/kills.json` | Array of timestamps |
+| Data            | Location                                                | Format                          |
+| --------------- | ------------------------------------------------------- | ------------------------------- |
+| Settings        | UserDefaults (shared suite `com.gotosleep.shared`)      | Managed by macOS                |
+| Answer log      | `~/Library/Application Support/GoToSleep/answers.jsonl` | JSON Lines (one entry per line) |
+| Questions       | Bundled in app                                          | `questions.json`                |
+| Session markers | `~/Library/Application Support/GoToSleep/session-*`     | Timestamp files                 |
+| Kill log        | `~/Library/Application Support/GoToSleep/kills.json`    | Array of timestamps             |
 
 ## Troubleshooting
 
 ### Overlay doesn't go full-screen / Cmd+Tab still works
+
 Grant Accessibility permissions: **System Settings → Privacy & Security → Accessibility** → toggle on GoToSleep. Without this, the app can't enable kiosk mode.
 
 ### Daemon doesn't start
+
 Check that it's registered: **System Settings → General → Login Items** → GoToSleep should be listed. If not, open the app and go through the first-run setup again.
 
 Check daemon logs:
+
 ```bash
 cat /tmp/go-to-sleep-daemon.stdout.log
 cat /tmp/go-to-sleep-daemon.stderr.log
 ```
 
 ### App doesn't appear in menu bar
+
 Make sure you're running `GoToSleep.app`, not the daemon binary directly. The app has `LSUIElement = YES`, which means no dock icon — look in the menu bar for the moon icon.
 
 ### Questions don't load
+
 Make sure `questions.json` is included in the app bundle. After building, verify it's there:
 
 ```bash
