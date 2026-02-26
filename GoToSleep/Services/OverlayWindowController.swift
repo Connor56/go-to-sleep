@@ -16,8 +16,8 @@ class OverlayWindowController {
     private var blockerWindows: [CGDirectDisplayID: KioskWindow] = [:]
     private var screenObserver: Any?
 
-    func show(questions: [Question], onComplete: @escaping () -> Void) {
-        print("\(debugMarker) OverlayWindowController.show called questionCount=\(questions.count)")
+    func show(questionStore: QuestionStore, onComplete: @escaping () -> Void) {
+        print("\(debugMarker) OverlayWindowController.show called")
         guard let mainScreen = NSScreen.main else {
             print("\(debugMarker) OverlayWindowController.show no NSScreen.main available")
             return
@@ -25,11 +25,10 @@ class OverlayWindowController {
 
         // Primary window — questions overlay on the main screen
         let primary = makeKioskWindow(for: mainScreen)
-        let overlayView = OverlayView(questions: questions, onComplete: onComplete)
+        let overlayView = OverlayView(questionStore: questionStore, onComplete: onComplete)
+            .colorScheme(.dark)  // ensure SwiftUI renders text fields with light text
         primary.contentView = NSHostingView(rootView: overlayView)
-        primary.makeKeyAndOrderFront(nil)
         primaryWindow = primary
-        print("\(debugMarker) Primary overlay shown on main screen, frame=\(primary.frame)")
 
         // Blocker windows on all other screens
         for screen in NSScreen.screens where screen != mainScreen {
@@ -46,6 +45,16 @@ class OverlayWindowController {
             .disableSessionTermination,
         ]
         print("\(debugMarker) NSApp.presentationOptions set for kiosk mode")
+
+        // Make key AFTER setting presentation options to avoid focus being stolen
+        primary.makeKeyAndOrderFront(nil)
+        print("\(debugMarker) Primary overlay shown on main screen, frame=\(primary.frame)")
+
+        // Ensure content view can accept first responder for text fields
+        if let contentView = primary.contentView {
+            primary.makeFirstResponder(contentView)
+            print("\(debugMarker) Set firstResponder to contentView")
+        }
 
         // Watch for screen hotplug (monitors connected/disconnected during overlay)
         screenObserver = NotificationCenter.default.addObserver(
