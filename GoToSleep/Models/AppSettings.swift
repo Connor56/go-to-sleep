@@ -25,6 +25,25 @@ class AppSettings: ObservableObject {
     @AppStorage("hasCompletedSetup", store: UserDefaults(suiteName: suiteName))
     var hasCompletedSetup: Bool = false
 
+    /// JSON-encoded array of enabled skill tag strings (e.g. `["percentages","half-life-decay"]`).
+    /// @AppStorage doesn't support arrays, so we store as a JSON string.
+    @AppStorage("enabledSkillTags", store: UserDefaults(suiteName: suiteName))
+    var enabledSkillTags: String = "[\"percentages\",\"half-life-decay\"]"
+
+    func getEnabledTags() -> Set<String> {
+        guard let data = enabledSkillTags.data(using: .utf8),
+              let arr = try? JSONDecoder().decode([String].self, from: data) else {
+            return ["percentages", "half-life-decay"]
+        }
+        return Set(arr)
+    }
+
+    func setEnabledTags(_ tags: Set<String>) {
+        guard let data = try? JSONEncoder().encode(Array(tags)),
+              let str = String(data: data, encoding: .utf8) else { return }
+        enabledSkillTags = str
+    }
+
     private init() {
         print("\(Self.debugMarker) AppSettings initialized")
         print("\(Self.debugMarker) suiteName=\(Self.suiteName)")
