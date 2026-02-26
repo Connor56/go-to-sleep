@@ -1,122 +1,174 @@
 import SwiftUI
 
+/// Full-screen bedtime overlay with score-to-exit question system.
+/// The user must correctly answer N questions (from AppSettings.questionsPerSession)
+/// before the overlay dismisses. Questions are drawn from an infinite pool.
 struct OverlayView: View {
-    private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
-    let questions: [Question]
-    let onComplete: () -> Void
+  private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
+  let questionStore: QuestionStore
+  let onComplete: () -> Void
 
-    @State private var currentIndex = 0
-    @State private var answers: [String]
+  @State private var currentResolved: ResolvedQuestion?
+  @State private var score = 0
+  @State private var seenQuestionIds = Set<String>()
+  @State private var questionsAttempted = 0
 
-    init(questions: [Question], onComplete: @escaping () -> Void) {
-        self.questions = questions
-        self.onComplete = onComplete
-        self._answers = State(initialValue: Array(repeating: "", count: questions.count))
-    }
+  private var targetScore: Int { AppSettings.shared.questionsPerSession }
 
-    private var currentAnswer: Binding<String> {
-        $answers[currentIndex]
-    }
+  init(questionStore: QuestionStore, onComplete: @escaping () -> Void) {
+    self.questionStore = questionStore
+    self.onComplete = onComplete
+  }
 
-    private var isCurrentAnswered: Bool {
-        !answers[currentIndex].trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
+  var body: some View {
+    let _ = print(
+      "\(debugMarker) OverlayView.body score=\(score)/\(targetScore) questionsAttempted=\(questionsAttempted) currentResolved=\(currentResolved?.id ?? "nil") seenCount=\(seenQuestionIds.count)"
+    )
+    ZStack {
+      LinearGradient(
+        colors: [
+          Color(red: 0.05, green: 0.05, blue: 0.15),
+          Color(red: 0.1, green: 0.08, blue: 0.2),
+        ],
+        startPoint: .top,
+        endPoint: .bottom
+      )
+      .ignoresSafeArea()
 
-    private var isLastQuestion: Bool {
-        currentIndex == questions.count - 1
-    }
-
-    var body: some View {
-        ZStack {
-            // Dark calming background
-            LinearGradient(
-                colors: [Color(red: 0.05, green: 0.05, blue: 0.15),
-                         Color(red: 0.1, green: 0.08, blue: 0.2)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-
-            // Debug dismiss button — top-right corner
-            VStack {
-                HStack {
-                    Spacer()
-                    Button("Dismiss") {
-                        print("\(debugMarker) Debug dismiss button pressed")
-                        onComplete()
-                    }
-                    .buttonStyle(.plain)
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.4))
-                    .padding(8)
-                    .background(Color.white.opacity(0.1))
-                    .cornerRadius(6)
-                    .padding(16)
-                }
-                Spacer()
-            }
-
-            VStack(spacing: 40) {
-                Spacer()
-
-                // Progress indicator
-                Text("\(currentIndex + 1) of \(questions.count)")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.5))
-                    .tracking(2)
-                    .textCase(.uppercase)
-
-                // Question
-                QuestionView(question: questions[currentIndex], answer: currentAnswer)
-                    .frame(maxWidth: 500)
-                    .id(currentIndex) // force re-render on index change
-
-                // Navigation button
-                Button(action: advance) {
-                    Text(isLastQuestion ? "Finish" : "Next")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(width: 160, height: 44)
-                        .background(isCurrentAnswered ? Color.blue : Color.gray.opacity(0.3))
-                        .cornerRadius(10)
-                }
-                .buttonStyle(.plain)
-                .disabled(!isCurrentAnswered)
-                .keyboardShortcut(.return, modifiers: [])
-
-                Spacer()
-            }
-            .padding(40)
-        }
-        .onAppear {
-            print("\(debugMarker) OverlayView appeared with questionCount=\(questions.count)")
-        }
-        .onChange(of: currentIndex) { newValue in
-            print("\(debugMarker) OverlayView currentIndex changed -> \(newValue)")
-        }
-    }
-
-    private func advance() {
-        print("\(debugMarker) OverlayView.advance called index=\(currentIndex)")
-        guard isCurrentAnswered else { return }
-
-        // Log this answer
-        let q = questions[currentIndex]
-        print("\(debugMarker) Logging answer for questionId=\(q.id)")
-        AnswerLogger.log(
-            questionId: q.id,
-            questionText: q.text,
-            answer: answers[currentIndex]
-        )
-
-        if isLastQuestion {
-            print("\(debugMarker) Last question answered, calling onComplete")
+      // Debug dismiss button
+      VStack {
+        HStack {
+          Spacer()
+          Button("Dismiss") {
+            print("\(debugMarker) Debug dismiss button pressed")
             onComplete()
-        } else {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                currentIndex += 1
-            }
-            print("\(debugMarker) Moving to next question index=\(currentIndex)")
+          }
+          .buttonStyle(.plain)
+          .font(.caption)
+          .foregroundColor(.white.opacity(0.4))
+          .padding(8)
+          .background(Color.white.opacity(0.1))
+          .cornerRadius(6)
+          .padding(16)
         }
+        Spacer()
+      }
+
+      VStack(spacing: 40) {
+        Spacer()
+
+        scoreIndicator
+
+        if let resolved = currentResolved {
+          let _ = print(
+            "\(debugMarker) OverlayView rendering QuestionView id=\(resolved.id) type=\(resolved.question.type.rawValue) renderId=\(resolved.id)-\(questionsAttempted)"
+          )
+          QuestionView(resolved: resolved) { result in
+            print(
+              "\(debugMarker) OverlayView received result questionId=\(result.questionId) correct=\(result.correct) attempts=\(result.attempts) userAnswer='\(result.userAnswer)'"
+            )
+            handleResult(result)
+          }
+          .frame(maxWidth: 500)
+          .id(resolved.id + "-\(questionsAttempted)")  // force re-render
+        } else {
+          let _ = print("\(debugMarker) OverlayView has nil currentResolved, QuestionView hidden")
+        }
+
+        Spacer()
+      }
+      .padding(40)
     }
+    .onAppear {
+      print("\(debugMarker) OverlayView appeared, targetScore=\(targetScore)")
+      drawNextQuestion()
+    }
+    .onDisappear {
+      print("\(debugMarker) OverlayView disappeared")
+    }
+    .onChange(of: currentResolved?.id) { value in
+      print("\(debugMarker) OverlayView.currentResolved changed id=\(value ?? "nil")")
+    }
+    .onChange(of: score) { value in
+      print("\(debugMarker) OverlayView.score changed value=\(value)")
+    }
+    .onChange(of: questionsAttempted) { value in
+      print("\(debugMarker) OverlayView.questionsAttempted changed value=\(value)")
+    }
+    .onChange(of: seenQuestionIds) { value in
+      print(
+        "\(debugMarker) OverlayView.seenQuestionIds changed count=\(value.count) ids=\(value.sorted())"
+      )
+    }
+  }
+
+  private var scoreIndicator: some View {
+    Text("\(score) / \(targetScore) correct")
+      .font(.caption)
+      .foregroundColor(.white.opacity(0.5))
+      .tracking(2)
+      .textCase(.uppercase)
+  }
+
+  private func drawNextQuestion() {
+    let previousResolvedId = currentResolved?.id ?? "nil"
+    print(
+      "\(debugMarker) drawNextQuestion called from=\(previousResolvedId) seenCount=\(seenQuestionIds.count) score=\(score)/\(targetScore)"
+    )
+    if let next = questionStore.nextQuestion(excluding: seenQuestionIds) {
+      seenQuestionIds.insert(next.id)
+      currentResolved = next
+      print(
+        "\(debugMarker) drawNextQuestion selected id=\(next.id) type=\(next.question.type.rawValue) previous=\(previousResolvedId) resolvedText=\(next.resolvedText.prefix(80))..."
+      )
+    } else {
+      // All seen — reset and try again
+      print("\(debugMarker) All questions seen, resetting pool")
+      seenQuestionIds.removeAll()
+      if let next = questionStore.nextQuestion(excluding: seenQuestionIds) {
+        seenQuestionIds.insert(next.id)
+        currentResolved = next
+        print(
+          "\(debugMarker) drawNextQuestion selected after reset id=\(next.id) type=\(next.question.type.rawValue) previous=\(previousResolvedId)"
+        )
+      } else {
+        currentResolved = nil
+        print("\(debugMarker) drawNextQuestion no question after reset, currentResolved=nil")
+      }
+    }
+  }
+
+  private func handleResult(_ result: QuestionResult) {
+    print(
+      "\(debugMarker) handleResult start questionId=\(result.questionId) correct=\(result.correct) attempts=\(result.attempts) currentResolved=\(currentResolved?.id ?? "nil")"
+    )
+    questionsAttempted += 1
+
+    AnswerLogger.log(
+      questionId: result.questionId,
+      questionText: currentResolved?.resolvedText ?? "",
+      answer: result.userAnswer
+    )
+
+    if result.correct {
+      score += 1
+      print(
+        "\(debugMarker) Correct! score=\(score)/\(targetScore) attempts=\(result.attempts)")
+    } else {
+      print(
+        "\(debugMarker) Incorrect. score=\(score)/\(targetScore) attempts=\(result.attempts)")
+    }
+
+    if score >= targetScore {
+      print("\(debugMarker) Target score reached, completing session")
+      onComplete()
+    } else {
+      print("\(debugMarker) handleResult drawing next question")
+      drawNextQuestion()
+    }
+
+    print(
+      "\(debugMarker) handleResult end score=\(score)/\(targetScore) questionsAttempted=\(questionsAttempted) currentResolved=\(currentResolved?.id ?? "nil")"
+    )
+  }
 }

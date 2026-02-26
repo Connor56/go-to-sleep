@@ -37,7 +37,7 @@ struct SettingsView: View {
         LockedSettingsView(startTime: settingsAlterationWindowStart, currentTime: currentTimestamp)
       }
     }
-    .frame(width: 400, height: 400)
+    .frame(width: 400, height: 500)
     .id(tickCount)
     .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
       tickCount += 1
@@ -98,6 +98,15 @@ struct UnlockedSettingsView: View {
         }
 
         Section {
+          SkillTagTogglesView()
+            .padding(.bottom, 32)
+        } header: {
+          Text("Question Skills")
+            .font(.title3)
+            .fontWeight(.semibold)
+        }
+
+        Section {
           Picker("Grace period", selection: $settings.gracePeriodMinutes) {
             ForEach(gracePeriodOptions, id: \.0) { value, label in
               Text(label).tag(value)
@@ -124,6 +133,40 @@ struct UnlockedSettingsView: View {
     components.hour = hour
     let date = Calendar.current.date(from: components) ?? Date()
     return formatter.string(from: date)
+  }
+}
+
+struct SkillTagTogglesView: View {
+  @ObservedObject private var settings = AppSettings.shared
+  private let store = QuestionStore()
+
+  var body: some View {
+    let allTags = store.allAvailableTags.sorted()
+    let enabledTags = settings.getEnabledTags()
+
+    if allTags.isEmpty {
+      Text("No calculation questions available")
+        .foregroundColor(.secondary)
+    } else {
+      ForEach(allTags, id: \.self) { tag in
+        Toggle(
+          friendlyName(for: tag),
+          isOn: Binding(
+            get: { enabledTags.contains(tag) },
+            set: { enabled in
+              var tags = settings.getEnabledTags()
+              if enabled { tags.insert(tag) } else { tags.remove(tag) }
+              settings.setEnabledTags(tags)
+            }
+          ))
+      }
+    }
+  }
+
+  private func friendlyName(for tag: String) -> String {
+    tag.split(separator: "-")
+      .map { $0.prefix(1).uppercased() + $0.dropFirst() }
+      .joined(separator: " ")
   }
 }
 
