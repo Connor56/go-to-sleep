@@ -72,6 +72,8 @@ Then you should run the app manually from the terminal with:
 ( ./build/Debug/GoToSleep.app/Contents/MacOS/GoToSleep --bedtime & pid=$!; sleep 30; kill $pid 2>/dev/null ) & wait
 ```
 
+This will prevent you from killing it with Ctrl+C in the terminal, but you can simply run multiple terminal instances whilst testing. If you don't use this command and you kill the process it will never run the `kill $pid` command, and you'll have loads of this open!
+
 This will run the app in the background and kill it after 30 seconds regardless of whether the app is actually providing you a proper overlay that you could reasonably dismiss. You should see the overlay appear and then disappear.
 
 ```bash
