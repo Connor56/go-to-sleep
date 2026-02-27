@@ -79,13 +79,21 @@ struct HardMultipleChoiceView: View {
           .fontWeight(.medium)
           .foregroundColor(.white)
 
+        Spacer()
+          .frame(maxHeight: 5)
+
         VStack(spacing: 10) {
           ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
-            choiceButton(index: index, choice: choice)
+            if let sel = selectedIndex, sel != index {
+              EmptyView()
+            } else {
+              choiceButton(index: index, choice: choice)
+            }
           }
         }
 
         Spacer()
+          .frame(maxHeight: 10)
 
         if let selected = selectedIndex {
           let _ = print(
@@ -93,8 +101,6 @@ struct HardMultipleChoiceView: View {
           )
           explanationSection(selectedIndex: selected)
         }
-
-        Spacer()
 
         nextButton
       }
