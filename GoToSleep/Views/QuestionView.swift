@@ -72,25 +72,32 @@ struct HardMultipleChoiceView: View {
     let _ = print(
       "\(debugMarker) HardMultipleChoiceView.body id=\(resolved.id) choiceCount=\(choices.count) answerIndex=\(resolved.question.answerIndex ?? -1)"
     )
-    VStack(alignment: .leading, spacing: 20) {
-      Text(resolved.resolvedText)
-        .font(.title2)
-        .fontWeight(.medium)
-        .foregroundColor(.white)
+    ScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Text(resolved.resolvedText)
+          .font(.title2)
+          .fontWeight(.medium)
+          .foregroundColor(.white)
 
-      ScrollView {
         VStack(spacing: 10) {
           ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
             choiceButton(index: index, choice: choice)
           }
         }
-      }
 
-      if let selected = selectedIndex {
-        explanationSection(selectedIndex: selected)
-      }
+        Spacer()
 
-      nextButton
+        if let selected = selectedIndex {
+          let _ = print(
+            "\(debugMarker) Selected index was: \(selected)"
+          )
+          explanationSection(selectedIndex: selected)
+        }
+
+        Spacer()
+
+        nextButton
+      }
     }
     .onAppear { questionAppearedAt = Date() }
     .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
@@ -100,9 +107,8 @@ struct HardMultipleChoiceView: View {
 
   private func choiceButton(index: Int, choice: ChoiceOption) -> some View {
     Button {
-      guard selectedIndex == nil else { return }
+      // guard selectedIndex == nil else { return }
       selectedIndex = index
-      startCountdown()
     } label: {
       HStack {
         Text(choice.text)
@@ -112,9 +118,6 @@ struct HardMultipleChoiceView: View {
         if selectedIndex == index {
           Image(systemName: isCorrect == true ? "checkmark.circle.fill" : "xmark.circle.fill")
             .foregroundColor(isCorrect == true ? .green : .red)
-        } else if selectedIndex != nil && index == resolved.question.answerIndex {
-          Image(systemName: "checkmark.circle.fill")
-            .foregroundColor(.green)
         }
       }
       .padding(12)
@@ -130,15 +133,15 @@ struct HardMultipleChoiceView: View {
     if index == sel {
       return isCorrect == true ? Color.green.opacity(0.3) : Color.red.opacity(0.3)
     }
-    if index == resolved.question.answerIndex {
-      return Color.green.opacity(0.3)
-    }
     return Color.white.opacity(0.05)
   }
 
   @ViewBuilder
   private func explanationSection(selectedIndex: Int) -> some View {
     // Show hint for wrong answer
+    let _ = print(
+      "\(debugMarker) isCorrect: \(isCorrect), selected index: \(selectedIndex)"
+    )
     if isCorrect == false, let hint = choices[selectedIndex].hint {
       Text(hint)
         .font(.callout)
@@ -148,7 +151,10 @@ struct HardMultipleChoiceView: View {
     }
 
     // Show explanation
-    if let explanation = resolved.processedExplanation() {
+    if isCorrect == true, let explanation = resolved.processedExplanation() {
+      let _ = print(
+        "\(debugMarker) the explanation is: \(explanation)"
+      )
       Text(explanation)
         .font(.body)
         .foregroundColor(.white.opacity(0.85))
@@ -156,11 +162,16 @@ struct HardMultipleChoiceView: View {
         .padding(.top, 4)
         .transition(.opacity)
     }
+
+    let _ = print(
+      "\(debugMarker) made it here."
+    )
   }
 
   private var nextButton: some View {
     Group {
       if selectedIndex != nil {
+        let _ = print("I'm at the next button")
         Button(action: reportResult) {
           Text(timerRemaining > 0 ? "Next (\(timerRemaining)s)" : "Next")
             .font(.headline)
@@ -171,20 +182,15 @@ struct HardMultipleChoiceView: View {
         }
         .buttonStyle(.plain)
         .disabled(timerRemaining > 0)
+        .frame(maxWidth: .infinity)
       }
     }
   }
 
-  private func startCountdown() {
-    let elapsed = Int(Date().timeIntervalSince(questionAppearedAt))
-    let minimum = resolved.question.minimumSeconds ?? 30
-    timerRemaining = max(0, minimum - elapsed)
-  }
-
   private func updateTimer() {
-    guard selectedIndex != nil else { return }
+    // guard selectedIndex != nil else { return }
     let elapsed = Int(Date().timeIntervalSince(questionAppearedAt))
-    let minimum = resolved.question.minimumSeconds ?? 30
+    let minimum = 5  //resolved.question.minimumSeconds ?? 30
     timerRemaining = max(0, minimum - elapsed)
   }
 
