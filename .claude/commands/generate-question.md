@@ -35,10 +35,16 @@ Generate a new sleep science question for the GoToSleep app.
 
 ### Type 2: `verifiable_fact`
 - `answerType`: "percentage", "number", or "word"
-- For numbers: `exactAnswer` (number), `tolerance` (acceptable margin)
+- For numbers: `exactAnswer` (number), `tolerance` (acceptable margin), `maxAttempts`: always 1 (one shot — a failure is a failure)
 - For words: `exactAnswer` (string), `maxAttempts` (default 5)
 - Word answers should be specific scientific terms
 - Correct answers show explanation; incorrect answers do NOT reveal the answer
+- **Numeric questions MUST include `hints`** — 4 directional hints based on whether the user's answer is too low/high and within/beyond 25% of the correct answer:
+  - `tooLowClose`: user guessed too low but within 25%
+  - `tooHighClose`: user guessed too high but within 25%
+  - `tooLowFar`: user guessed too low by more than 25%
+  - `tooHighFar`: user guessed too high by more than 25%
+- Hints should be educational and specific to the question context — not generic "too high/low" messages
 
 ```json
 {
@@ -52,6 +58,12 @@ Generate a new sleep science question for the GoToSleep app.
   "unit": "%",
   "maxAttempts": 1,
   "minimumSeconds": 30,
+  "hints": {
+    "tooLowClose": "You're close but the real impact is worse than that.",
+    "tooHighClose": "Close, but not quite that extreme.",
+    "tooLowFar": "Way too low. The effect is far more dramatic than most people realise.",
+    "tooHighFar": "Too high. The real number is alarming enough without inflating it."
+  },
   "correctExplanation": "Explanation...",
   "reference": "Walker, Why We Sleep, Ch. X"
 }
