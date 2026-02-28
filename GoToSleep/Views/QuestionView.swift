@@ -631,9 +631,10 @@ struct CalculationQuestionView: View {
     }
 
     let tolerance = resolved.question.tolerance ?? 5
-    if abs(userValue - expected) <= tolerance {
+    let diff = abs(userValue - expected)
+    if diff <= tolerance {
       isCorrect = true
-      feedbackMessage = "Correct!"
+      feedbackMessage = diff < 0.01 ? "Correct!" : "Almost right, you get a pass this time."
       startCountdown()
     } else if currentAttempt >= maxAttempts {
       fail()
