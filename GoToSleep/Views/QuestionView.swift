@@ -152,7 +152,6 @@ struct HardMultipleChoiceView: View {
       Text(hint)
         .font(.callout)
         .foregroundColor(.orange)
-        .fixedSize(horizontal: false, vertical: true)
         .transition(.opacity)
     }
 
@@ -164,7 +163,6 @@ struct HardMultipleChoiceView: View {
       Text(explanation)
         .font(.body)
         .foregroundColor(.white.opacity(0.85))
-        .fixedSize(horizontal: false, vertical: true)
         .padding(.top, 4)
         .transition(.opacity)
     }
@@ -262,7 +260,6 @@ struct VerifiableFactView: View {
         Text(feedbackMessage)
           .font(.callout)
           .foregroundColor(isCorrect ? .green : (isFailed ? .red : .orange))
-          .fixedSize(horizontal: false, vertical: true)
           .transition(.opacity)
       }
 
@@ -272,7 +269,6 @@ struct VerifiableFactView: View {
         Text(explanation)
           .font(.body)
           .foregroundColor(.white.opacity(0.85))
-          .fixedSize(horizontal: false, vertical: true)
           .transition(.opacity)
       }
 
@@ -524,7 +520,6 @@ struct CalculationQuestionView: View {
         Text(feedbackMessage)
           .font(.callout)
           .foregroundColor(isCorrect ? .green : (isFailed ? .red : .orange))
-          .fixedSize(horizontal: false, vertical: true)
           .transition(.opacity)
       }
 
@@ -532,7 +527,6 @@ struct CalculationQuestionView: View {
         Text(explanation)
           .font(.body)
           .foregroundColor(.white.opacity(0.85))
-          .fixedSize(horizontal: false, vertical: true)
           .transition(.opacity)
       }
 
