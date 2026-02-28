@@ -408,7 +408,22 @@ struct VerifiableFactView: View {
     if diff <= tolerance {
       succeed(message: "Correct!")
     } else {
-      fail(message: "Incorrect.")
+      let hint = numericHint(userValue: userValue, exactAnswer: exactAnswer)
+      fail(message: hint ?? "Incorrect.")
+    }
+  }
+
+  private func numericHint(userValue: Double, exactAnswer: Double) -> String? {
+    guard let hints = resolved.question.hints else { return nil }
+    let tooLow = userValue < exactAnswer
+    let percentOff = abs(userValue - exactAnswer) / abs(exactAnswer)
+    let isClose = percentOff <= 0.25
+
+    switch (tooLow, isClose) {
+    case (true, true): return hints.tooLowClose
+    case (true, false): return hints.tooLowFar
+    case (false, true): return hints.tooHighClose
+    case (false, false): return hints.tooHighFar
     }
   }
 
