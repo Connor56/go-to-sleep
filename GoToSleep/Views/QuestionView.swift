@@ -602,16 +602,19 @@ struct CalculationQuestionView: View {
   }
 
   private var nextButton: some View {
-    Button(action: reportResult) {
-      Text(timerRemaining > 0 ? "Next (\(timerRemaining)s)" : "Next")
-        .font(.headline)
-        .foregroundColor(.white)
-        .frame(width: 160, height: 44)
-        .background(timerRemaining > 0 ? Color.gray.opacity(0.3) : Color.blue)
-        .cornerRadius(10)
+    Group {
+      Button(action: reportResult) {
+        Text(timerRemaining > 0 ? "Next (\(timerRemaining)s)" : "Next")
+          .font(.headline)
+          .foregroundColor(.white)
+          .frame(width: 160, height: 44)
+          .background(timerRemaining > 0 ? Color.gray.opacity(0.3) : Color.blue)
+          .cornerRadius(10)
+      }
+      .buttonStyle(.plain)
+      .disabled(timerRemaining > 0)
+      .frame(maxWidth: .infinity)
     }
-    .buttonStyle(.plain)
-    .disabled(timerRemaining > 0)
   }
 
   private func submitAnswer() {
