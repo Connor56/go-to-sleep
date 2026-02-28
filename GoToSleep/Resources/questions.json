@@ -143,6 +143,12 @@
     "unit": "%",
     "maxAttempts": 1,
     "minimumSeconds": 30,
+    "hints": {
+      "tooLowClose": "You're in the right ballpark, but the immune hit is even worse than that.",
+      "tooHighClose": "Close, but the drop isn't quite that catastrophic \u2014 though the real number is bad enough.",
+      "tooLowFar": "Way too low. Sleep deprivation obliterates your immune frontline far more dramatically than most people realise.",
+      "tooHighFar": "Too high. Your body does retain some cancer-fighting cells, but not nearly enough to protect you properly."
+    },
     "correctExplanation": "A single bad night of just 4 hours stripped away 70% of your natural killer cells. These are the cells that hunt down and destroy cancerous mutations in your body every single day. Now imagine the state of your immune army after a week, a month, or years of short sleep.",
     "reference": "Walker, Why We Sleep, Ch. 8"
   },
@@ -169,6 +175,12 @@
     "unit": "%",
     "maxAttempts": 1,
     "minimumSeconds": 30,
+    "hints": {
+      "tooLowClose": "Not quite that low. Adequate sleep provides strong protection, but it doesn't make you nearly immune.",
+      "tooHighClose": "A bit too high. Sleep offers more protection against the common cold than you're giving it credit for.",
+      "tooLowFar": "Too low. While sleep helps enormously, it doesn't reduce infection rates to near-zero.",
+      "tooHighFar": "Way too high. The gap between short and adequate sleepers is far more dramatic than that \u2014 sleep is a powerful shield."
+    },
     "correctExplanation": "Those sleeping 7+ hours had roughly an 18% infection rate versus about 50% for those sleeping 5 hours or less. Nearly three times the protection, just from sleeping adequately. Your immune system doesn't just benefit from sleep \u2014 it fundamentally depends on it.",
     "reference": "Walker, Why We Sleep, Ch. 8"
   },
@@ -183,6 +195,12 @@
     "unit": "minutes",
     "maxAttempts": 1,
     "minimumSeconds": 30,
+    "hints": {
+      "tooLowClose": "A bit too short. Each cycle needs enough time for the brain to complete both NREM and REM stages.",
+      "tooHighClose": "Slightly too long. At that length you'd get fewer complete cycles per night than research shows.",
+      "tooLowFar": "Much too short. That wouldn't give the brain enough time to cycle through all sleep stages even once.",
+      "tooHighFar": "Way too long. At that duration you'd only complete a couple of cycles in a full night of sleep."
+    },
     "correctExplanation": "Each sleep cycle lasts about 90 minutes. But here's what matters: the ratio of NREM to REM within each cycle changes across the night. Early cycles are dominated by deep NREM sleep; later cycles are dominated by REM sleep. This means if you cut your sleep short by even 90 minutes, you lose a disproportionate amount of REM sleep \u2014 the stage critical for emotional regulation and creativity.",
     "reference": "Walker, Why We Sleep, Ch. 3"
   },
@@ -197,6 +215,12 @@
     "unit": "%",
     "maxAttempts": 1,
     "minimumSeconds": 30,
+    "hints": {
+      "tooLowClose": "A bit too low. Sleep deprivation cripples the immune response, but the body holds on to slightly more than that.",
+      "tooHighClose": "Slightly too high. The reduction in antibody production is even more alarming than your guess.",
+      "tooLowFar": "Much too low. The immune system is weakened by sleep loss, but vaccine response doesn't drop that drastically.",
+      "tooHighFar": "Way too high. Sleep deprivation's impact on vaccine effectiveness is far worse than you think \u2014 your body barely registers the vaccine."
+    },
     "correctExplanation": "Sleep-restricted participants produced less than 50% of the normal antibody response to the flu vaccine. In other words, their bodies barely recognized the vaccine. Sleep is so fundamental to immune function that without it, even medical interventions designed to protect you are rendered largely ineffective.",
     "reference": "Walker, Why We Sleep, Ch. 8"
   },
@@ -286,6 +310,12 @@
     "unit": "genes",
     "maxAttempts": 1,
     "minimumSeconds": 30,
+    "hints": {
+      "tooLowClose": "Not quite enough. The genetic disruption from just one week of short sleep is broader than you'd expect.",
+      "tooHighClose": "Close, but a bit too many. The real number is staggering enough without inflating it.",
+      "tooLowFar": "Far too few. Sleep deprivation wreaks havoc across a much wider portion of your genome than that.",
+      "tooHighFar": "Too many. While the real number is shockingly high, the human genome doesn't suffer quite that broadly from one week of short sleep."
+    },
     "correctExplanation": "711 genes had their activity distorted after just one week of 6-hour sleep. Half of those genes were cranked up \u2014 promoting inflammation, stress responses, and cardiovascular disease. The other half were dialed down \u2014 suppressing immune function and metabolic regulation. Your DNA literally changes its behavior when you don't sleep enough.",
     "reference": "Walker, Why We Sleep, Ch. 8"
   }
