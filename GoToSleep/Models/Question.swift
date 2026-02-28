@@ -21,6 +21,13 @@ struct ParameterDefinition: Codable {
   let decimalPlaces: Int?
 }
 
+struct VerifiableFactHints: Codable {
+  let tooLowClose: String   // within 25% below the answer
+  let tooHighClose: String  // within 25% above the answer
+  let tooLowFar: String     // more than 25% below the answer
+  let tooHighFar: String    // more than 25% above the answer
+}
+
 struct Question: Codable, Identifiable {
   let id: String
   let type: QuestionType
@@ -40,6 +47,7 @@ struct Question: Codable, Identifiable {
   let exactAnswer: AnyCodableValue?
   let tolerance: Double?
   let unit: String?
+  let hints: VerifiableFactHints?  // directional hints for numeric answers
 
   // calculation
   let parameters: [String: ParameterDefinition]?
