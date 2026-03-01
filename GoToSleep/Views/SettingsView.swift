@@ -31,7 +31,7 @@ struct SettingsView: View {
       end: settingsAlterationWindowEnd)
 
     Group {
-      if !showUnlocked {
+      if showUnlocked {
         UnlockedSettingsView()
       } else {
         LockedSettingsView(
