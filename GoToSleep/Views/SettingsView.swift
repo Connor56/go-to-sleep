@@ -6,7 +6,7 @@ struct SettingsView: View {
     "requestedSettingsChangeTimestamp", store: UserDefaults(suiteName: AppSettings.suiteName))
   private var requestedSettingsChangeTimestamp: Int = 0
 
-  private let twentyMinutesInSeconds: Int = 1200
+  private let timeToWaitInSeconds: Int = 300  // 5 minutes
 
   func inAlterationWindow(currentTime: Int, start: Int, end: Int) -> Bool {
     let afterStart = currentTime >= start
@@ -22,8 +22,8 @@ struct SettingsView: View {
   @State private var tickCount = 0
 
   var body: some View {
-    let settingsAlterationWindowStart = requestedSettingsChangeTimestamp + twentyMinutesInSeconds
-    let settingsAlterationWindowEnd = requestedSettingsChangeTimestamp + 2 * twentyMinutesInSeconds
+    let settingsAlterationWindowStart = requestedSettingsChangeTimestamp + timeToWaitInSeconds
+    let settingsAlterationWindowEnd = requestedSettingsChangeTimestamp + 2 * timeToWaitInSeconds
     let currentTimestamp = Int(Date().timeIntervalSince1970)
 
     let showUnlocked = inAlterationWindow(
@@ -31,10 +31,14 @@ struct SettingsView: View {
       end: settingsAlterationWindowEnd)
 
     Group {
-      if showUnlocked {
+      if !showUnlocked {
         UnlockedSettingsView()
       } else {
-        LockedSettingsView(startTime: settingsAlterationWindowStart, currentTime: currentTimestamp)
+        LockedSettingsView(
+          startTime: settingsAlterationWindowStart,
+          currentTime: currentTimestamp,
+          timeToWaitInSeconds: timeToWaitInSeconds
+        )
       }
     }
     .frame(width: 400, height: 500)
@@ -51,6 +55,8 @@ struct UnlockedSettingsView: View {
   private var requestedSettingsChangeTimestamp: Int = 0
 
   @ObservedObject private var settings = AppSettings.shared
+  private let store = QuestionStore()
+
   private let debugMarker = "[GTS_DEBUG_REMOVE_ME]"
 
   private let gracePeriodOptions = [
@@ -90,21 +96,36 @@ struct UnlockedSettingsView: View {
           Stepper(
             "Questions per session: \(settings.questionsPerSession)",
             value: $settings.questionsPerSession, in: 1...10
-          ).padding(.bottom, 32)
+          )
+
+          let allTags = store.allAvailableTags.sorted()
+          let enabledTags = settings.getEnabledTags()
+
+          if allTags.isEmpty {
+            Text("No calculation questions available")
+              .foregroundColor(.secondary)
+          } else {
+            ForEach(allTags, id: \.self) { tag in
+              Toggle(
+                friendlyName(for: tag),
+                isOn: Binding(
+                  get: { enabledTags.contains(tag) },
+                  set: { enabled in
+                    var tags = settings.getEnabledTags()
+                    if enabled { tags.insert(tag) } else { tags.remove(tag) }
+                    settings.setEnabledTags(tags)
+                  }
+                ))
+            }
+          }
         } header: {
           Text("Questions")
             .font(.title3)
             .fontWeight(.semibold)
         }
 
-        Section {
-          SkillTagTogglesView()
-            .padding(.bottom, 32)
-        } header: {
-          Text("Question Skills")
-            .font(.title3)
-            .fontWeight(.semibold)
-        }
+        Spacer()
+          .frame(maxHeight: 32)
 
         Section {
           Picker("Grace period", selection: $settings.gracePeriodMinutes) {
@@ -126,6 +147,12 @@ struct UnlockedSettingsView: View {
     }
   }
 
+  private func friendlyName(for tag: String) -> String {
+    tag.split(separator: "-")
+      .map { $0.prefix(1).uppercased() + $0.dropFirst() }
+      .joined(separator: " ")
+  }
+
   private func formatHour(_ hour: Int) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "h a"
@@ -136,48 +163,14 @@ struct UnlockedSettingsView: View {
   }
 }
 
-struct SkillTagTogglesView: View {
-  @ObservedObject private var settings = AppSettings.shared
-  private let store = QuestionStore()
-
-  var body: some View {
-    let allTags = store.allAvailableTags.sorted()
-    let enabledTags = settings.getEnabledTags()
-
-    if allTags.isEmpty {
-      Text("No calculation questions available")
-        .foregroundColor(.secondary)
-    } else {
-      ForEach(allTags, id: \.self) { tag in
-        Toggle(
-          friendlyName(for: tag),
-          isOn: Binding(
-            get: { enabledTags.contains(tag) },
-            set: { enabled in
-              var tags = settings.getEnabledTags()
-              if enabled { tags.insert(tag) } else { tags.remove(tag) }
-              settings.setEnabledTags(tags)
-            }
-          ))
-      }
-    }
-  }
-
-  private func friendlyName(for tag: String) -> String {
-    tag.split(separator: "-")
-      .map { $0.prefix(1).uppercased() + $0.dropFirst() }
-      .joined(separator: " ")
-  }
-}
-
 struct LockedSettingsView: View {
   @AppStorage(
     "requestedSettingsChangeTimestamp", store: UserDefaults(suiteName: AppSettings.suiteName))
   private var requestedSettingsChangeTimestamp: Int = 0
 
   let startTime: Int
-
   let currentTime: Int
+  let timeToWaitInSeconds: Int
 
   var body: some View {
     VStack {
@@ -197,10 +190,12 @@ struct LockedSettingsView: View {
           requestedSettingsChangeTimestamp = 0
         }
       } else {
-        Text("On request, settings will open after 20 minutes, and stay open for 20 minutes.")
-          .padding(.horizontal, 32)
-          .padding(.bottom, 16)
-          .multilineTextAlignment(.center)
+        Text(
+          "On request, settings will open after \(timeToWaitInSeconds / 60) minutes, and stay open for \(timeToWaitInSeconds) minutes."
+        )
+        .padding(.horizontal, 32)
+        .padding(.bottom, 16)
+        .multilineTextAlignment(.center)
 
         Button("Request Change") {
           requestedSettingsChangeTimestamp = currentTime
