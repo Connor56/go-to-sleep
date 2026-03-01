@@ -191,7 +191,7 @@ struct LockedSettingsView: View {
         }
       } else {
         Text(
-          "On request, settings will open after \(timeToWaitInSeconds / 60) minutes, and stay open for \(timeToWaitInSeconds) minutes."
+          "On request, settings will open after \(timeToWaitInSeconds / 60) minutes, and stay open for \(timeToWaitInSeconds / 60) minutes."
         )
         .padding(.horizontal, 32)
         .padding(.bottom, 16)
