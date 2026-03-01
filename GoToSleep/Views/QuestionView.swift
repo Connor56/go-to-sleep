@@ -194,7 +194,7 @@ struct HardMultipleChoiceView: View {
   private func updateTimer() {
     // guard selectedIndex != nil else { return }
     let elapsed = Int(Date().timeIntervalSince(questionAppearedAt))
-    let minimum = 5  //resolved.question.minimumSeconds ?? 30
+    let minimum = resolved.question.minimumSeconds ?? 30
     timerRemaining = max(0, minimum - elapsed)
   }
 
