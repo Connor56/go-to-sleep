@@ -8,7 +8,7 @@ let dismissOverlayNotificationName = Notification.Name("come.gotosleep.dismissOv
 
 func main() {
   Paths.ensureDirectoryExists()
-  print("[GoToSleepDaemon] Started at \(Date())")
+  // print("[GoToSleepDaemon] Started at \(Date())")
 
   var killTimestamps: [Date] = []
 
@@ -18,7 +18,7 @@ func main() {
     RunLoop.current.run(until: Date(timeIntervalSinceNow: 10))
 
     let timestamp = Date()
-    print("[GoToSleepDaemon] Running, and time is \(timestamp)")
+    // print("[GoToSleepDaemon] Running, and time is \(timestamp)")
 
     let settings = readSettings()
 
@@ -30,9 +30,9 @@ func main() {
     else {
       // If the main app is running, dismiss the overlay
       if isMainAppRunning() {
-        print(
-          "[GoToSleepDaemon] Main app already running - dismissing overlay"
-        )
+        // print(
+        //   "[GoToSleepDaemon] Main app already running - dismissing overlay"
+        // )
         requestOverlayDismissalFromRunningApp()
       }
       continue
@@ -49,15 +49,15 @@ func main() {
 
     // If the main app is running (menu bar mode), tell it to show the overlay.
     if isMainAppRunning() {
-      print(
-        "[GoToSleepDaemon] Main app already running — requesting overlay via distributed notification"
-      )
+      // print(
+      //   "[GoToSleepDaemon] Main app already running — requesting overlay via distributed notification"
+      // )
       requestOverlayFromRunningApp()
       continue
     }
 
     // Launch the main app with --bedtime flag
-    print("[GoToSleepDaemon] Bedtime — launching main app")
+    // print("[GoToSleepDaemon] Bedtime — launching main app")
     let exitedCleanly = launchAndMonitor()
 
     if !exitedCleanly {
@@ -78,7 +78,7 @@ func main() {
         killTimestamps.removeAll()
       }
     } else {
-      print("[GoToSleepDaemon] Session completed normally")
+      // print("[GoToSleepDaemon] Session completed normally")
     }
   }
 }
