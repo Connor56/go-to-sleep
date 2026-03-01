@@ -17,7 +17,7 @@ struct OverlayView: View {
 
   @State private var lastQuestionAppearance: Int = Int(Date().timeIntervalSince1970)
   private var dismissalTime = 60
-  @State private var timeToDismiss: Int = dismissalTime  // Default, gets updated later
+  @State private var timeToDismiss: Int = 60  // Default, gets updated later
 
   init(questionStore: QuestionStore, onComplete: @escaping () -> Void) {
     self.questionStore = questionStore
