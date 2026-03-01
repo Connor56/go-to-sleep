@@ -37,7 +37,7 @@ xcodebuild -project GoToSleep.xcodeproj \
 The built app lands at:
 
 ```
-build/Build/Products/Release/GoToSleep.app
+build/Release/GoToSleep.app
 ```
 
 ### Verify the bundle
