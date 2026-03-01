@@ -15,6 +15,9 @@ struct OverlayView: View {
 
   private var targetScore: Int { AppSettings.shared.questionsPerSession }
 
+  @State private var lastQuestionAppearance: Int = Int(Date().timeIntervalSince1970)
+  @State private var timeToDismiss: Int = 100  // Default, gets updated later
+
   init(questionStore: QuestionStore, onComplete: @escaping () -> Void) {
     self.questionStore = questionStore
     self.onComplete = onComplete
@@ -39,8 +42,14 @@ struct OverlayView: View {
       VStack {
         HStack {
           Spacer()
-          Button("Dismiss") {
+          Button("Dismiss in \(timeToDismiss)") {
+            let now = Int(Date().timeIntervalSince1970)
+            timeToDismiss = lastQuestionAppearance + 300 - now
+
+            guard timeToDismiss < 0 else { return }
+
             print("\(debugMarker) Debug dismiss button pressed")
+
             onComplete()
           }
           .buttonStyle(.plain)
@@ -71,6 +80,13 @@ struct OverlayView: View {
           }
           .frame(maxWidth: 500)
           .id(resolved.id + "-\(questionsAttempted)")  // force re-render
+          .onAppear {
+            let now = Int(Date().timeIntervalSince1970)
+
+            print("\(debugMarker) Setting timer for debug button: \(now)")
+
+            lastQuestionAppearance = now
+          }
         } else {
           let _ = print("\(debugMarker) OverlayView has nil currentResolved, QuestionView hidden")
         }
