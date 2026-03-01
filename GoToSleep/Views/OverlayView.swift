@@ -16,7 +16,8 @@ struct OverlayView: View {
   private var targetScore: Int { AppSettings.shared.questionsPerSession }
 
   @State private var lastQuestionAppearance: Int = Int(Date().timeIntervalSince1970)
-  @State private var timeToDismiss: Int = 100  // Default, gets updated later
+  private var dismissalTime = 60
+  @State private var timeToDismiss: Int = dismissalTime  // Default, gets updated later
 
   init(questionStore: QuestionStore, onComplete: @escaping () -> Void) {
     self.questionStore = questionStore
@@ -44,7 +45,7 @@ struct OverlayView: View {
           Spacer()
           Button("Dismiss in \(timeToDismiss)") {
             let now = Int(Date().timeIntervalSince1970)
-            timeToDismiss = lastQuestionAppearance + 300 - now
+            timeToDismiss = lastQuestionAppearance + dismissalTime - now
 
             guard timeToDismiss < 0 else { return }
 
